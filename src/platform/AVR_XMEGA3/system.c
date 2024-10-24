@@ -250,11 +250,9 @@ void hibernate_s(utime_t s, sleep_mode_t sleep_mode, uHAL_flags_t flags) {
 	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
 		sleep_mode = HIBERNATE_LIGHT;
 	}
-#if uHAL_HIBERNATE_LIMIT
-	if (sleep_mode > uHAL_HIBERNATE_LIMIT) {
+	if (uHAL_HIBERNATE_LIMIT && sleep_mode > uHAL_HIBERNATE_LIMIT) {
 		sleep_mode = uHAL_HIBERNATE_LIMIT;
 	}
-#endif
 
 	switch (sleep_mode) {
 	case HIBERNATE_LIGHT:
@@ -313,11 +311,9 @@ void hibernate(sleep_mode_t sleep_mode, uHAL_flags_t flags) {
 	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
 		sleep_mode = HIBERNATE_LIGHT;
 	}
-#if uHAL_HIBERNATE_LIMIT
-	if (sleep_mode > uHAL_HIBERNATE_LIMIT) {
+	if (uHAL_HIBERNATE_LIMIT && sleep_mode > uHAL_HIBERNATE_LIMIT) {
 		sleep_mode = uHAL_HIBERNATE_LIMIT;
 	}
-#endif
 
 	switch (sleep_mode) {
 	case HIBERNATE_LIGHT:
