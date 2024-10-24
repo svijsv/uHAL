@@ -598,17 +598,25 @@ void sleep_ms(utime_t ms) {
 
 	return;
 }
+
+static sleep_mode_t limit_hibernation_depth(sleep_mode_t sleep_mode) {
+	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
+		sleep_mode = HIBERNATE_LIGHT;
+	} else if (uHAL_HIBERNATE_LIMIT != 0 && sleep_mode > uHAL_HIBERNATE_LIMIT) {
+		sleep_mode = uHAL_HIBERNATE_LIMIT;
+	}
+
+	return sleep_mode;
+}
 void hibernate_s(utime_t s, sleep_mode_t sleep_mode, uHAL_flags_t flags) {
 	uint_t wu = 0;
 
+	sleep_mode = limit_hibernation_depth(sleep_mode);
+
 	pre_hibernate_hook_caller(&s, &sleep_mode, flags);
 	const utime_t begin_s = s;
-
-	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
-		sleep_mode = HIBERNATE_LIGHT;
-	}
-	if (uHAL_HIBERNATE_LIMIT && sleep_mode > uHAL_HIBERNATE_LIMIT) {
-		sleep_mode = uHAL_HIBERNATE_LIMIT;
+	if (!uHAL_SKIP_OTHER_CHECKS) {
+		sleep_mode = limit_hibernation_depth(sleep_mode);
 	}
 
 	if (s == 0) {
@@ -635,13 +643,11 @@ void hibernate_s(utime_t s, sleep_mode_t sleep_mode, uHAL_flags_t flags) {
 void hibernate(sleep_mode_t sleep_mode, uHAL_flags_t flags) {
 	uint32_t pwr_cr = 0;
 
-	pre_hibernate_hook_caller(NULL, &sleep_mode, flags);
+	sleep_mode = limit_hibernation_depth(sleep_mode);
 
-	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
-		sleep_mode = HIBERNATE_LIGHT;
-	}
-	if (uHAL_HIBERNATE_LIMIT && sleep_mode > uHAL_HIBERNATE_LIMIT) {
-		sleep_mode = uHAL_HIBERNATE_LIMIT;
+	pre_hibernate_hook_caller(NULL, &sleep_mode, flags);
+	if (!uHAL_SKIP_OTHER_CHECKS) {
+		sleep_mode = limit_hibernation_depth(sleep_mode);
 	}
 
 	switch (sleep_mode) {
