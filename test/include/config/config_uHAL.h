@@ -24,8 +24,6 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-#include "../../lib/uHAL/config/config_uHAL.h"
-
 //
 // Helpful macros
 //
@@ -37,15 +35,12 @@
 //
 // Basic system configuration
 //
-#undef uHAL_USE_SUBSYSTEM_DEFAULT
-#define uHAL_USE_SUBSYSTEM_DEFAULT 1
-#undef uHAL_USE_DRIVER_DEFAULT
-#define uHAL_USE_DRIVER_DEFAULT    1
+#define uHAL_USE_SUBSYSTEM_DEFAULT 0
+#define uHAL_USE_DRIVER_DEFAULT    0
 
 #define PRINT_PLATFORM_INFO 0
 #define PAUSE_MS 5000U
 
-#undef uHAL_USE_RTC
 #define uHAL_USE_RTC 1
 
 // Useful for AVR, size with these set is closer to release build but with
@@ -58,14 +53,10 @@
 # define ERROR_STATE_NOF(msg) error_state_crude()
 #else
 # define uHAL_USE_SMALL_CODE 0
-# undef uHAL_USE_UART
-# undef uHAL_USE_UART_COMM
 # define uHAL_USE_UART 1
 # define uHAL_USE_UART_COMM 1
 #endif
 
-#undef UART_COMM_BUFFER_BYTES
-#undef TERMINAL_BUFFER_BYTES
 #if uHAL_USE_SMALL_CODE
 // Setting NDEBUG instead of redefining assert() results in assert() still being
 // used if debug.h is included before the config file (which it may or may not be)
@@ -79,9 +70,6 @@
 # define TERMINAL_BUFFER_BYTES  64U
 #endif
 
-#undef uHAL_SKIP_INVALID_ARG_CHECKS
-#undef uHAL_SKIP_INIT_CHECKS
-#undef uHAL_SKIP_OTHER_CHECKS
 #define uHAL_SKIP_INVALID_ARG_CHECKS uHAL_USE_SMALL_CODE
 #define uHAL_SKIP_INIT_CHECKS uHAL_USE_SMALL_CODE
 #define uHAL_SKIP_OTHER_CHECKS uHAL_USE_SMALL_CODE
@@ -117,9 +105,7 @@
 #define TEST_DATE_DAY     18
 
 #define TEST_ADC 0
-#undef ADC_SAMPLE_uS
 #define ADC_SAMPLE_uS 10
-#undef ADC_SAMPLE_COUNT
 #define ADC_SAMPLE_COUNT 4U
 
 #define TEST_SD 0
@@ -129,12 +115,10 @@
 //#define SPI_FREQUENCY_HZ 100000UL
 
 #define TEST_UART_LISTEN 0
-#undef UART_INPUT_BUFFER_BYTES
 #define UART_INPUT_BUFFER_BYTES 8U
 //#define UART_INPUT_BUFFER_BYTES 0U
 
 #define TEST_TERMINAL 0
-#undef TERMINAL_HAVE_EXTRA_CMDS
 #define TERMINAL_HAVE_EXTRA_CMDS TEST_TERMINAL
 #define TEST_TERMINAL_LED_PIN LED_PIN
 
@@ -144,10 +128,9 @@
 
 #define TEST_SLEEP 0
 
-#undef uHAL_ANNOUNCE_HIBERNATE
 #define uHAL_ANNOUNCE_HIBERNATE 0
 
-#define TEST_HIBERNATE 1
+#define TEST_HIBERNATE 0
 //#undef uHAL_HIBERNATE_LIMIT
 //#define uHAL_HIBERNATE_LIMIT HIBERNATE_DEEP
 // Deep sleep interferes with PWM (at least on STM32s)
@@ -161,5 +144,6 @@
 #define TEST_RESET_LOOPS 3
 
 #include "reconcile.h"
+#include "../../lib/uHAL/config/config_uHAL.h"
 
 #endif // _CONFIG_H
