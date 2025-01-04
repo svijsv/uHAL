@@ -470,6 +470,16 @@ static void clocks_init(void) {
 	return;
 }
 
+static sleep_mode_t limit_hibernation_depth(sleep_mode_t sleep_mode) {
+	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
+		sleep_mode = HIBERNATE_LIGHT;
+	} else if (uHAL_HIBERNATE_LIMIT != 0 && sleep_mode > uHAL_HIBERNATE_LIMIT) {
+		sleep_mode = uHAL_HIBERNATE_LIMIT;
+	}
+
+	return sleep_mode;
+}
+
 #if uHAL_USE_HIBERNATE
 static void light_sleep_ms(utime_t ms, uint_fast8_t flags, uint_t *wakeups) {
 	uint32_t period;
@@ -599,15 +609,6 @@ void sleep_ms(utime_t ms) {
 	return;
 }
 
-static sleep_mode_t limit_hibernation_depth(sleep_mode_t sleep_mode) {
-	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
-		sleep_mode = HIBERNATE_LIGHT;
-	} else if (uHAL_HIBERNATE_LIMIT != 0 && sleep_mode > uHAL_HIBERNATE_LIMIT) {
-		sleep_mode = uHAL_HIBERNATE_LIMIT;
-	}
-
-	return sleep_mode;
-}
 void hibernate_s(utime_t s, sleep_mode_t sleep_mode, uHAL_flags_t flags) {
 	uint_t wu = 0;
 

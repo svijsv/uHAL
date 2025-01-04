@@ -174,6 +174,16 @@ void platform_reset(void) {
 	_PROTECTED_WRITE(RSTCTRL.SWRR, RSTCTRL_SWRE_bm);
 }
 
+static sleep_mode_t limit_hibernation_depth(sleep_mode_t sleep_mode) {
+	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
+		sleep_mode = HIBERNATE_LIGHT;
+	} else if (uHAL_HIBERNATE_LIMIT != 0 && sleep_mode > uHAL_HIBERNATE_LIMIT) {
+		sleep_mode = uHAL_HIBERNATE_LIMIT;
+	}
+
+	return sleep_mode;
+}
+
 #if uHAL_USE_HIBERNATE
 // set_sleep_mode() must be called with the appropriate argument prior to
 // calling _sleep_ms()
@@ -241,15 +251,6 @@ void sleep_ms(utime_t ms) {
 	return;
 }
 
-static sleep_mode_t limit_hibernation_depth(sleep_mode_t sleep_mode) {
-	if (uHAL_CHECK_STATUS(uHAL_FLAG_INHIBIT_HIBERNATION)) {
-		sleep_mode = HIBERNATE_LIGHT;
-	} else if (uHAL_HIBERNATE_LIMIT != 0 && sleep_mode > uHAL_HIBERNATE_LIMIT) {
-		sleep_mode = uHAL_HIBERNATE_LIMIT;
-	}
-
-	return sleep_mode;
-}
 void hibernate_s(utime_t s, sleep_mode_t sleep_mode, uHAL_flags_t flags) {
 	uint8_t set_mode;
 	uint_t wakeups;
