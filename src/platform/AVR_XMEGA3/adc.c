@@ -187,6 +187,9 @@ err_t adc_on(void) {
 
 	return ERR_OK;
 }
+bool adc_is_on(void) {
+	return BIT_IS_SET(ADCx.CTRLA, ADC_ENABLE_bm);
+}
 err_t adc_off(void) {
 	CLEAR_BIT(ADCx.CTRLA, ADC_ENABLE_bm);
 
@@ -222,7 +225,6 @@ adc_t adc_read_pin(gpio_pin_t pin) {
 	if (channel == NO_AIN_CHANNEL) {
 		return ERR_ADC;
 	}
-
 	return adc_read_channel(channel);
 }
 static adc_t adc_read_channel(uint8_t channel) {
