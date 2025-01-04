@@ -28,6 +28,7 @@
 #include "time.h"
 
 #include "ulib/include/printf.h"
+#include "ulib/include/halloc.h"
 
 #include <avr/io.h>
 
