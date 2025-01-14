@@ -11,7 +11,7 @@
 /
 /-------------------------------------------------------------------------*/
 /*
-  Modified 2021, 2024 svijsv
+  Modified 2021, 2024, 2025 svijsv
 */
 
 /*--------------------------------------------------------------------------
@@ -69,15 +69,15 @@ static BYTE drive_type;
 
 
 static void CS_HIGH(void) {
-	//gpio_set_state(SPI_CS_SD_PIN, GPIO_HIGH);
-	output_pin_on(SPI_CS_SD_PIN);
+	gpio_set_state(SPI_CS_SD_PIN, GPIO_HIGH);
+	//output_pin_on(SPI_CS_SD_PIN);
 	delay_ms(1);
 
 	return;
 }
 static void CS_LOW(void) {
-	//gpio_set_state(SPI_CS_SD_PIN, GPIO_LOW);
-	output_pin_off(SPI_CS_SD_PIN);
+	gpio_set_state(SPI_CS_SD_PIN, GPIO_LOW);
+	//output_pin_off(SPI_CS_SD_PIN);
 	delay_ms(1);
 
 	return;
