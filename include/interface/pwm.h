@@ -23,6 +23,15 @@
 ///    This file should only be included by interface.h.
 ///
 
+//
+// This is defined in the device platform.h, it's included here for
+// documentation purposes.
+#if __HAVE_DOXYGEN__
+///
+/// The handle used to manage a PWM output.
+typedef struct pwm_output_t pwm_output_t;
+#endif // __HAVE_DOXYGEN__
+
 ///
 /// Enable hardware PWM output on an IO pin.
 ///
