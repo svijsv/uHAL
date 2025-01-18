@@ -394,6 +394,9 @@ err_t pwm_off(pwm_output_t *output) {
 
 	if (SELECT_BITS(output->TIMx->CCER, TIM_CCER_CC1E|TIM_CCER_CC2E|TIM_CCER_CC3E|TIM_CCER_CC4E) == 0) {
 		CLEAR_BIT(output->TIMx->CR1, TIM_CR1_CEN);
+		while (BIT_IS_SET(output->TIMx->CR1, TIM_CR1_CEN)) {
+			// Nothing to do here
+		}
 		clock_disable(output->TIMxEN);
 	}
 	gpio_set_mode(output->pin, GPIO_MODE_RESET, GPIO_FLOAT);

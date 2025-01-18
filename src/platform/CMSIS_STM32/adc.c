@@ -132,6 +132,9 @@ err_t adc_on(void) {
 }
 err_t adc_off(void) {
 	CLEAR_BIT(ADCx->CR2, ADC_CR2_ADON);
+	while (BIT_IS_SET(ADCx->CR2, ADC_CR2_ADON)) {
+		// Nothing to do here
+	}
 	clock_disable(ADCx_CLOCKEN);
 
 	return ERR_OK;

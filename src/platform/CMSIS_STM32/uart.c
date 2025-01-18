@@ -238,6 +238,9 @@ err_t uart_on(const uart_port_t *p) {
 	clock_enable(p->clocken);
 	pins_on(p);
 	SET_BIT(p->uartx->CR1, USART_CR1_UE);
+	while (!BIT_IS_SET(p->uartx->CR1, USART_CR1_UE)) {
+		// Nothing to do here
+	}
 
 	return ERR_OK;
 }
@@ -256,6 +259,9 @@ err_t uart_off(const uart_port_t *p) {
 #endif
 
 	CLEAR_BIT(p->uartx->CR1, USART_CR1_UE);
+	while (BIT_IS_SET(p->uartx->CR1, USART_CR1_UE)) {
+		// Nothing to do here
+	}
 	pins_off(p);
 	clock_disable(p->clocken);
 

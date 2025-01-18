@@ -144,6 +144,9 @@ static void pins_off(void) {
 err_t spi_on(void) {
 	clock_enable(SPIx_CLOCKEN);
 	SET_BIT(SPIx->CR1, SPI_CR1_SPE);
+	while (!BIT_IS_SET(SPIx->CR1, SPI_CR1_SPE)) {
+		// Nothing to do here
+	}
 
 	pins_on();
 
@@ -186,6 +189,9 @@ err_t spi_off(void) {
 	pins_off();
 
 	CLEAR_BIT(SPIx->CR1, SPI_CR1_SPE);
+	while (BIT_IS_SET(SPIx->CR1, SPI_CR1_SPE)) {
+		// Nothing to do here
+	}
 	clock_disable(SPIx_CLOCKEN);
 
 	return ERR_OK;

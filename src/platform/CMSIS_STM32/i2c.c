@@ -177,6 +177,9 @@ err_t i2c_on(void) {
 	// pins from briefly pulling low
 	clock_enable(I2Cx_CLOCKEN);
 	SET_BIT(I2Cx->CR1, I2C_CR1_PE);
+	while (!BIT_IS_SET(I2Cx->CR1, I2C_CR1_PE)) {
+		// Nothing to do here
+	}
 	pins_on();
 
 	return ERR_OK;
@@ -205,6 +208,9 @@ err_t i2c_off(void) {
 	// pins from briefly pulling low
 	pins_off();
 	CLEAR_BIT(I2Cx->CR1, I2C_CR1_PE);
+	while (BIT_IS_SET(I2Cx->CR1, I2C_CR1_PE)) {
+		// Nothing to do here
+	}
 	clock_disable(I2Cx_CLOCKEN);
 
 	return ERR_OK;

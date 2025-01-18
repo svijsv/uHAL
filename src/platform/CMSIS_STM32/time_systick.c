@@ -27,6 +27,9 @@
 #include "system.h"
 
 #define SYSTICK_PSC_MAX (SysTick_LOAD_RELOAD_Msk + 1U)
+enum {
+	SYSTICK_CTRL_MASK = (SysTick_CTRL_TICKINT_Msk|SysTick_CTRL_ENABLE_Msk)
+};
 
 // System tick count, milliseconds
 volatile utime_t G_sys_msticks = 0;
@@ -66,13 +69,19 @@ void systick_init(void) {
 	return;
 }
 void disable_systick(void) {
-	CLEAR_BIT(SysTick->CTRL, SysTick_CTRL_TICKINT_Msk|SysTick_CTRL_ENABLE_Msk);
+	CLEAR_BIT(SysTick->CTRL, SYSTICK_CTRL_MASK);
+	while (BITS_ARE_SET(SysTick->CTRL, SYSTICK_CTRL_MASK)) {
+		// Nothing to do here
+	}
 	return;
 }
 void enable_systick(void) {
-	SET_BIT(SysTick->CTRL, SysTick_CTRL_TICKINT_Msk|SysTick_CTRL_ENABLE_Msk);
+	SET_BIT(SysTick->CTRL, SYSTICK_CTRL_MASK);
+	while (!BITS_ARE_SET(SysTick->CTRL, SYSTICK_CTRL_MASK)) {
+		// Nothing to do here
+	}
 	return;
 }
 bool systick_is_enabled(void) {
-	return BITS_ARE_SET(SysTick->CTRL, SysTick_CTRL_TICKINT_Msk|SysTick_CTRL_ENABLE_Msk);
+	return BITS_ARE_SET(SysTick->CTRL, SYSTICK_CTRL_MASK);
 }
