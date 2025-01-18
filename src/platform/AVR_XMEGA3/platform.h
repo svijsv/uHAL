@@ -211,6 +211,18 @@ typedef struct {
 #define GPIO_QUICK_READ(_qpin_) (SELECT_BITS(*((_qpin_).port), (_qpin_).mask) != 0)
 
 extern volatile utime_t G_sys_msticks;
+
+#undef WRITE_VOLATILE
+#define WRITE_VOLATILE(set, get) \
+	do { \
+		uint8_t sreg = SREG; \
+		cli(); \
+		(set) = (get); \
+		SREG = sreg; \
+	} while (0);
+#undef READ_VOLATILE
+#define READ_VOLATILE(set, get) WRITE_VOLATILE(set, get)
+
 /*
 #define NOW_MS() ({ utime_t _n_; READ_VOLATILE(_n_, G_sys_msticks); _n_; })
 */
@@ -219,31 +231,10 @@ extern volatile utime_t G_sys_msticks;
 //   2. The compiler may *not* inline it, which can save quite a bit of space for
 //      something where a few tens of microseconds in overhead probably don't
 //      matter
-/*
-ALWAYS_INLINE utime_t _NOW_MS(void) {
+INLINE utime_t _NOW_MS(void) {
 	utime_t n;
 
 	READ_VOLATILE(n, G_sys_msticks)
-
-	return n;
-}
-*/
-ALWAYS_INLINE utime_t _NOW_MS(void) {
-	utime_t n;
-
-	// We can reasonably assume that interrupts are enabled or else there would
-	// be no updated systick to check against
-#if ! uHAL_SKIP_OTHER_CHECKS
-	uint8_t sreg = SREG;
-#endif
-
-	cli();
-	n = G_sys_msticks;
-	sei();
-
-#if ! uHAL_SKIP_OTHER_CHECKS
-	SREG = sreg;
-#endif
 
 	return n;
 }
