@@ -282,7 +282,7 @@ err_t ssd1306_init(ssd1306_handle_t *handle, const ssd1306_cfg_t *cfg) {
 		//
 		// Stuff that doesn't really need to be set because it's not usually
 		// changed
-#if uHAL_USE_SMALL_CODE < 1
+#if SSD1306_FULL_INIT
 		SSD1306_CMD_SCROLL_OFF,
 		SSD1306_CMD_DISPLAY_START_LINE_DEFAULT,
 		/*
@@ -367,7 +367,7 @@ err_t ssd1306_init(ssd1306_handle_t *handle, const ssd1306_cfg_t *cfg) {
 			goto I2C_END;
 		}
 
-#if SSD1306_INIT_COMMANDS_COUNT
+#if SSD1306_INIT_COMMANDS_COUNT > 0
 		if ((res = i2c_transmit_block_continue(cfg->init_cmds, SSD1306_INIT_COMMANDS_COUNT, I2C_TIMEOUT)) != ERR_OK) {
 			goto I2C_END;
 		}
@@ -750,14 +750,8 @@ err_t ssd1306_draw_text(ssd1306_handle_t *handle, const ssd1306_font_t *font, ui
 	}
 #endif
 
-#if SSD1306_FONT_AUTOSCALE && uHAL_USE_SMALL_CODE > 1
-	uint8_t x = (font->scale_x > 0) ? font->scale_x : 1;
-	uint8_t y = (font->scale_y > 0) ? font->scale_y : 1;
-
-	return _ssd1306_draw_text_scaled(handle, font, x, y, xt, yt, text);
-
-#elif SSD1306_FONT_AUTOSCALE
-	if ((font->scale_x > 1) || (font->scale_y > 1)) {
+#if SSD1306_FONT_AUTOSCALE
+	if (!SSD1306_AUTOSCALE_COEXIST || ((font->scale_x > 1) || (font->scale_y > 1))) {
 		uint8_t x = (font->scale_x > 0) ? font->scale_x : 1;
 		uint8_t y = (font->scale_y > 0) ? font->scale_y : 1;
 

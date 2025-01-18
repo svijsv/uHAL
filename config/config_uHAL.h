@@ -50,10 +50,13 @@
 // Code size/performance options
 //
 // Cut down the size of internal components at the expense of functionality
-// If 1, use smaller structures for data in RAM
-// If 2, also use smaller structures for data in ROM
 #ifndef uHAL_USE_SMALL_CODE
 # define uHAL_USE_SMALL_CODE 0
+#endif
+//
+// Use smaller (but less expressive) message strings
+#ifndef uHAL_USE_SMALL_MESSAGES
+# define uHAL_USE_SMALL_MESSAGES uHAL_USE_SMALL_CODE
 #endif
 //
 // Skip checks for invalid arguments passed to functions
@@ -346,4 +349,16 @@
 // If set, include a basic ASCII font to be used when the passed font is NULL
 #ifndef SSD1306_INCLUDE_DEFAULT_FONT
 # define SSD1306_INCLUDE_DEFAULT_FONT 1
+#endif
+//
+// If set, fully initialize the device instead of assuming it starts off in
+// the default configuration
+#ifndef SSD1306_FULL_INIT
+# define SSD1306_FULL_INIT (!uHAL_USE_SMALL_CODE)
+#endif
+//
+// If SSD1306_FONT_AUTOSCALE is set but this is not, then ssd1306_draw_text()
+// doesn't fall back to unscaled text
+#ifndef SSD1306_AUTOSCALE_COEXIST
+# define SSD1306_AUTOSCALE_COEXIST (!uHAL_USE_SMALL_CODE)
 #endif

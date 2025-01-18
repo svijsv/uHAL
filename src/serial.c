@@ -84,13 +84,11 @@ err_t serial_init(void) {
 		return ERR_INIT;
 	}
 #endif
-#if ! uHAL_SKIP_INVALID_ARG_CHECKS
-#endif
 
 	uHAL_SET_STATUS(uHAL_FLAG_SERIAL_IS_UP);
 
 	print_system_info();
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 # if uHAL_USE_TERMINAL
 	PUTS("Press any key to enter the console\r\n", 0);
 	PUTS("If that doesn't work, you may need to press a button first\r\n", 0);
@@ -264,11 +262,6 @@ void logger(const char *fmt, ...) {
 }
 
 void print_system_info(void) {
-#if ! uHAL_SKIP_INIT_CHECKS
-#endif
-#if ! uHAL_SKIP_INVALID_ARG_CHECKS
-#endif
-
 	if (!uHAL_CHECK_STATUS(uHAL_FLAG_SERIAL_IS_UP)) {
 		return;
 	}
@@ -281,7 +274,7 @@ void print_system_info(void) {
 # endif
 #endif
 
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 	uint8_t year, month, day, hour, minute, second;
 	utime_t seconds;
 
@@ -298,9 +291,9 @@ void print_system_info(void) {
 		(uint )minute,
 		(uint )second
 	);
-#if uHAL_USE_FATFS
+# if uHAL_USE_FATFS
 	PRINTF("Using FatFS revision %u\r\n", (uint )FFCONF_DEF);
-#endif
+# endif
 
 	_print_platform_info(serial_putc);
 #endif

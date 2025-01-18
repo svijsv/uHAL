@@ -40,7 +40,7 @@
 DEBUG_CPP_MACRO(TERMINAL_BUFFER_BYTES)
 
 
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 static FMEM_STORAGE const char TERMINAL_INTRO[] =
 	"\r\nEntering command terminal\r\nType 'help' for a list of commands.\r\n";
 static FMEM_STORAGE const char TERMINAL_OUTRO[] =
@@ -80,20 +80,20 @@ static FMEM_STORAGE const terminal_cmd_t default_cmds[] = {
 };
 
 static FMEM_STORAGE const char default_help[] =
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 "Accepted commands:\r\n"
 "   set_time YY.MM.DD hh:mm:ss - Set system time, clock is 24-hour\r\n"
 "   info                       - Print system information\r\n"
 "   delay <seconds>\r\n"
 # if uHAL_USE_FDISK
 "   fdisk                      - Format the SD card\r\n"
-# endif // uHAL_USE_FDISK
+# endif
 "   help                       - Display this help\r\n"
 "   exit                       - Exit the command terminal\r\n"
 
-#else // uHAL_USE_SMALL_CODE
+#else
 "Commands: set_time info delay fdisk help exit\r\n"
-#endif // uHAL_USE_SMALL_CODE
+#endif
 ;
 
 #define NEXT_TOK(_cs, _sep) (cstring_next_token((_cs), (_sep)))
@@ -228,7 +228,7 @@ static txsize_t terminal_gets(char *line_in, txsize_t size) {
 				}
 			}
 			if ((newlines != 0) || (other != 0)) {
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 				PRINTF("Ignoring %u newlines and %u other characters after the linebreak\r\n", (uint )newlines, (uint )other);
 #else
 				PRINTF("%u extra bytes\r\n", (uint_t )(newlines + other));
@@ -338,7 +338,7 @@ static int terminalcmd_set_time(const char *line_in) {
 	if (year > 2000) {
 		year -= 2000;
 	}
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 	PRINTF("Setting time to 20%02u.%02u.%02u %02u:%02u:%02u\r\n",
 		(uint )year, (uint )month, (uint )day, (uint )hour, (uint )minute, (uint )second);
 #endif
@@ -348,7 +348,7 @@ static int terminalcmd_set_time(const char *line_in) {
 		year = 0;
 	}
 	if (((err = set_date(year, month, day)) != ERR_OK) || ((err = set_time(hour, minute, second)) != ERR_OK)) {
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 		PRINTF("   Error %d while setting time\r\n", (int )err);
 #else
 		PRINTF("   Error %d\r\n", (int )err);
@@ -366,7 +366,7 @@ static int terminalcmd_delay_S(const char *line_in) {
 
 	n = atoi(NEXT_TOK(line_in, ' '));
 
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 	PRINTF("Delaying %u seconds...", (uint )n);
 #endif
 	n += NOW();
@@ -374,7 +374,7 @@ static int terminalcmd_delay_S(const char *line_in) {
 	while (NOW() < n) {
 		delay_ms(50);
 	}
-#if uHAL_USE_SMALL_CODE < 2
+#if ! uHAL_USE_SMALL_MESSAGES
 	PRINTF("done.\r\n");
 #endif
 

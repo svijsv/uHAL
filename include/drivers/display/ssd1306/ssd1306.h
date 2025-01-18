@@ -69,9 +69,9 @@ typedef struct {
 	uint8_t height; ///< Height of display in pixels
 	uint8_t width;  ///< Width of display in pixels
 	uint8_t flags;  ///< Configuration flags (see the @c SSD1306_CFG_FLAG_* macros)
-#if SSD1306_INIT_COMMANDS_COUNT || uHAL_USE_SMALL_CODE < 1 || __HAVE_DOXYGEN__
+#if SSD1306_INIT_COMMANDS_COUNT > 0 || __HAVE_DOXYGEN__
 	/// Additional initialization commands, see ssd1306.c for definitions
-	/// @attention This member is only present when @c SSD1306_INIT_COMMANDS_COUNT is set or @c uHAL_USE_SMALL_CODE is < 1.
+	/// @attention This member is only present when @c SSD1306_INIT_COMMANDS_COUNT is > 0.
 	uint8_t init_cmds[SSD1306_INIT_COMMANDS_COUNT];
 #endif
 } ssd1306_cfg_t;

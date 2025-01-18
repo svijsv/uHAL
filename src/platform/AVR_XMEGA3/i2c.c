@@ -385,7 +385,21 @@ err_t i2c_transmit_block_end(void) {
 // We can save program space just by using an alternative function that uses
 // a new timout for each call instead of a shared timeout, but that's probably
 // not what's normally wanted so only use it when desparate
-#if uHAL_USE_SMALL_CODE < 2
+#if uHAL_USE_SMALL_CODE
+err_t i2c_transmit_block(uint8_t addr, const uint8_t *tx_buffer, txsize_t tx_size, utime_t timeout) {
+	err_t res = ERR_OK;
+
+	if ((res = i2c_transmit_block_begin(addr, timeout)) != ERR_OK) {
+		goto END;
+	}
+	res = i2c_transmit_block_continue(tx_buffer, tx_size, timeout);
+
+END:
+	i2c_transmit_block_end();
+	return res;
+}
+
+#else // uHAL_USE_SMALL_CODE
 err_t i2c_transmit_block(uint8_t addr, const uint8_t *tx_buffer, txsize_t tx_size, utime_t timeout) {
 	err_t res = ERR_OK;
 
@@ -415,20 +429,7 @@ END:
 	_i2c_transmit_block_end();
 	return res;
 }
-#else // uHAL_USE_SMALL_CODE < 2
-err_t i2c_transmit_block(uint8_t addr, const uint8_t *tx_buffer, txsize_t tx_size, utime_t timeout) {
-	err_t res = ERR_OK;
-
-	if ((res = i2c_transmit_block_begin(addr, timeout)) != ERR_OK) {
-		goto END;
-	}
-	res = i2c_transmit_block_continue(tx_buffer, tx_size, timeout);
-
-END:
-	i2c_transmit_block_end();
-	return res;
-}
-#endif // uHAL_USE_SMALL_CODE < 2
+#endif // uHAL_USE_SMALL_CODE
 
 
 #endif // uHAL_USE_I2C

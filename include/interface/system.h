@@ -219,7 +219,7 @@ void error_state(const char *file_path, uint32_t lineno, const char *func_name, 
 /// This function is overrideable.
 void error_state_hook(void);
 
-#if ((DEBUG || (uHAL_USE_SMALL_CODE < 2)) && uHAL_USE_UART_COMM) || __HAVE_DOXYGEN__
+#if ((DEBUG || (!uHAL_USE_SMALL_MESSAGES)) && uHAL_USE_UART_COMM) || __HAVE_DOXYGEN__
 # ifndef ERROR_STATE
 ///
 /// Convenience macro for @c error_state().
@@ -238,7 +238,7 @@ void error_state_hook(void);
 #  define ERROR_STATE_NOF(msg) error_state(F1(__FILE__), __LINE__, __func__, msg)
 # endif
 
-#else // (DEBUG || (uHAL_USE_SMALL_CODE < 2)) && uHAL_USE_UART_COMM
+#else // (DEBUG || (!uHAL_USE_SMALL_MESSAGES)) && uHAL_USE_UART_COMM
 # ifndef ERROR_STATE
 #  define ERROR_STATE(msg)     error_state_crude()
 # endif
