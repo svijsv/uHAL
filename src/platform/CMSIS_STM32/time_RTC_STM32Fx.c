@@ -34,6 +34,9 @@
 #include "time_RTC.h"
 #include "system.h"
 
+// The RTC handles leap-years internally so if we don't correct for our 0-year
+// it may miscount.
+#define YEAR_CORRECTION (TIME_YEAR_0 - 2000)
 
 // 2^7 in PREDIV_A and 2^15 in PREDIV_S
 // Max input clock is therefore 0x80*0x8000, a bit less than 4.2MHz
@@ -41,8 +44,15 @@
 #define RTC_PSC_S_MAX (0x8000U)
 #define RTC_PSC_MAX (RTC_PSC_A_MAX * RTC_PSC_S_MAX)
 
-#define RTC_DR_DATE_MASK (RTC_DR_YT|RTC_DR_YU|RTC_DR_MT|RTC_DR_MU|RTC_DR_DT|RTC_DR_DU)
-#define RTC_TR_TIME_MASK (RTC_TR_HT|RTC_TR_HU|RTC_TR_MNT|RTC_TR_MNU|RTC_TR_ST|RTC_TR_SU)
+#define RTC_DR_YEAR_MASK  (RTC_DR_YT | RTC_DR_YU)
+#define RTC_DR_MONTH_MASK (RTC_DR_MT | RTC_DR_MU)
+#define RTC_DR_DAY_MASK   (RTC_DR_DT | RTC_DR_DU)
+#define RTC_DR_DATE_MASK (RTC_DR_YEAR_MASK | RTC_DR_MONTH_MASK | RTC_DR_DAY_MASK)
+
+#define RTC_TR_HOUR_MASK   (RTC_TR_HT  | RTC_TR_HU)
+#define RTC_TR_MINUTE_MASK (RTC_TR_MNT | RTC_TR_MNU)
+#define RTC_TR_SECOND_MASK (RTC_TR_ST  | RTC_TR_SU)
+#define RTC_TR_TIME_MASK (RTC_TR_HOUR_MASK | RTC_TR_MINUTE_MASK | RTC_TR_SECOND_MASK)
 
 // Per the manual, when the APB1 clock is < 7X the rtc clock the shadow registers
 // must be bypassed and the calendar registers may give corrupted results when
@@ -94,17 +104,17 @@ void RTC_Alarm_IRQHandler(void) {
 
 // These devices use BCD, I use seconds, so heres the conversion...
 // Partially copied from the ST HAL
-static uint8_t byte_to_bcd(uint8_t byte) {
+static uint_fast8_t byte_to_bcd(uint_fast8_t byte) {
 	uint32_t tmp;
 
-	tmp = (uint8_t )(byte / 10U) << 4U;
+	tmp = (uint_fast8_t )(byte / 10U) << 4U;
 	return tmp | (byte % 10U);
 }
-static uint8_t bcd_to_byte(uint8_t bcd) {
+static uint_fast8_t bcd_to_byte(uint_fast8_t bcd) {
 	uint32_t tmp;
 
-	tmp = ((uint8_t )(bcd & (uint8_t )0xF0U) >> (uint8_t )0x4U) * 10U;
-	return (tmp + (bcd & (uint8_t )0x0FU));
+	tmp = ((uint_fast8_t )(bcd & (uint_fast8_t )0xF0U) >> (uint_fast8_t )0x4U) * 10U;
+	return (tmp + (bcd & (uint_fast8_t )0x0FU));
 }
 
 //
@@ -253,10 +263,27 @@ void RTC_init(void) {
 
 	return;
 }
+static void calendarcfg_disable(void) {
+	CLEAR_BIT(RTC->ISR, RTC_ISR_INIT);
+	wait_for_sync();
+	cfg_disable();
+
+	return;
+}
+static void calendarcfg_enable(void) {
+	cfg_enable();
+	SET_BIT(RTC->ISR, RTC_ISR_INIT);
+	while (!BIT_IS_SET(RTC->ISR, RTC_ISR_INITF)) {
+		// Nothing to do here
+	}
+
+	return;
+}
+
 static utime_t _get_RTC_seconds(void) {
 	uint32_t tr, dr;
-	uint8_t hour, minute, second;
-	uint8_t year, month, day;
+	uint_fast8_t hour, minute, second;
+	uint_fast8_t year, month, day;
 
 	wait_for_sync();
 
@@ -281,26 +308,11 @@ static utime_t _get_RTC_seconds(void) {
 	second = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_SU_Pos));
 
 	year  = bcd_to_byte(GATHER_BITS(dr, 0xFFU, RTC_DR_YU_Pos));
+	year -= YEAR_CORRECTION;
 	month = bcd_to_byte(GATHER_BITS(dr, 0x1FU, RTC_DR_MU_Pos));
 	day   = bcd_to_byte(GATHER_BITS(dr, 0x3FU, RTC_DR_DU_Pos));
 
 	return date_to_seconds(year, month, day) + time_to_seconds(hour, minute, second);
-}
-static void calendarcfg_enable(void) {
-	cfg_enable();
-	SET_BIT(RTC->ISR, RTC_ISR_INIT);
-	while (!BIT_IS_SET(RTC->ISR, RTC_ISR_INITF)) {
-		// Nothing to do here
-	}
-
-	return;
-}
-static void calendarcfg_disable(void) {
-	CLEAR_BIT(RTC->ISR, RTC_ISR_INIT);
-	wait_for_sync();
-	cfg_disable();
-
-	return;
 }
 static err_t _set_RTC_seconds(utime_t s) {
 	uint32_t tr, dr;
@@ -309,6 +321,7 @@ static err_t _set_RTC_seconds(utime_t s) {
 
 	seconds_to_time(s, &hour, &minute, &second);
 	seconds_to_date(s, &year, &month, &day);
+	year += YEAR_CORRECTION;
 
 	wait_for_sync();
 
