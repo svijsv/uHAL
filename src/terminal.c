@@ -263,7 +263,7 @@ static int terminalcmd_show_help(const char *line_in) {
 	return 0;
 }
 
-// Format: 'set_time [[YY]YY.MM.DD] [hh:mm[:ss]]'
+// Format: 'set_time [[20]YY.MM.DD] [hh:mm[:ss]]'
 static int terminalcmd_set_time(const char *line_in) {
 	err_t err = ERR_OK;
 	time_year_t year;
@@ -369,7 +369,7 @@ static int terminalcmd_set_time(const char *line_in) {
 
 END:
 	if (bad_format) {
-		PUTS("Invalid format; use '[[YY]YY.MM.DD] [hh:mm[:ss]]'\r\n", 0);
+		PUTS("Invalid format; use '[[20]YY.MM.DD] [hh:mm[:ss]]'\r\n", 0);
 	}
 	return 0;
 }
