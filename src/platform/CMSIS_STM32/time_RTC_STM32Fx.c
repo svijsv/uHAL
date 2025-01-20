@@ -44,13 +44,13 @@
 #define RTC_DR_DATE_MASK (RTC_DR_YT|RTC_DR_YU|RTC_DR_MT|RTC_DR_MU|RTC_DR_DT|RTC_DR_DU)
 #define RTC_TR_TIME_MASK (RTC_TR_HT|RTC_TR_HU|RTC_TR_MNT|RTC_TR_MNU|RTC_TR_ST|RTC_TR_SU)
 
-// Per the manual, when the APB1 clock is < 7X the rtc clock the calendar
-// registers may give corrupted results when read and so it should be read
-// again
+// Per the manual, when the APB1 clock is < 7X the rtc clock the shadow registers
+// must be bypassed and the calendar registers may give corrupted results when
+// read and so should be read again
 #if G_freq_PCLK1 < (7 * G_freq_RTC)
-# define REREAD_CAL_REG 1
+# define APB1_IS_SLOW 1
 #else
-# define REREAD_CAL_REG 0
+# define APB1_IS_SLOW 0
 #endif
 
 static uint_fast8_t cfg_enabled = 0;
@@ -239,8 +239,10 @@ void RTC_init(void) {
 		set_RTC_prediv(G_freq_RTC);
 #endif
 
-		// 24-hour format
-		CLEAR_BIT(RTC->CR, RTC_CR_FMT);
+		RTC->CR =
+			0U << RTC_CR_FMT_Pos |                           // 24-hour format
+			(APB1_IS_SLOW ? 1U : 0U) << RTC_CR_BYPSHAD_Pos | // Bypass the shadow registers if APB1 is slow
+			0U;
 
 		CLEAR_BIT(RTC->ISR, RTC_ISR_INIT);
 	}
@@ -258,7 +260,7 @@ static utime_t _get_RTC_seconds(void) {
 
 	wait_for_sync();
 
-#if REREAD_CAL_REG
+#if APB1_IS_SLOW
 	uint32_t tr2, dr2;
 
 	do {
