@@ -46,12 +46,13 @@ err_t set_time(uint8_t hour, uint8_t minute, uint8_t second) {
 	// be called twice.
 	now = get_RTC_seconds();
 	now = SNAP_TO_FACTOR(now, SECONDS_PER_DAY) + time_to_seconds(hour, minute, second);
-	LOGGER("Setting time to %02u:%02u:%02u\r\n", (uint_t )hour, (uint_t )minute, (uint_t )second);
+	LOGGER("Setting time to %02u:%02u:%02u", (uint_t )hour, (uint_t )minute, (uint_t )second);
 	res = set_RTC_seconds(now);
 
 	return res;
 }
-err_t set_date(uint8_t year, uint8_t month, uint8_t day) {
+
+err_t set_date(uint_fast16_t year, uint8_t month, uint8_t day) {
 	err_t res;
 	uint32_t now;
 
@@ -68,7 +69,7 @@ err_t set_date(uint8_t year, uint8_t month, uint8_t day) {
 
 	// Conserve the time part of the RTC
 	now = (get_RTC_seconds() % SECONDS_PER_DAY) + date_to_seconds(year, month, day);
-	LOGGER("Setting date to %02u.%02u.%02u\r\n", (uint_t )(TIME_YEAR_0+(uint_t )year), (uint_t )month, (uint_t )day);
+	LOGGER("Setting date to %02u.%02u.%02u", (uint_t )year, (uint_t )month, (uint_t )day);
 	res = set_RTC_seconds(now);
 
 	return res;

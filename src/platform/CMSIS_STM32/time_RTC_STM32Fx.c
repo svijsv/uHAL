@@ -34,10 +34,6 @@
 #include "time_RTC.h"
 #include "system.h"
 
-// The RTC handles leap-years internally so if we don't correct for our 0-year
-// it may miscount.
-#define YEAR_CORRECTION (TIME_YEAR_0 - 2000)
-
 // 2^7 in PREDIV_A and 2^15 in PREDIV_S
 // Max input clock is therefore 0x80*0x8000, a bit less than 4.2MHz
 #define RTC_PSC_A_MAX (0x80U)
@@ -62,6 +58,11 @@
 #else
 # define APB1_IS_SLOW 0
 #endif
+
+// The RTC only stores 2 digit years but we need to be able to return the correct
+// time with both a set RTC (that is, a date) and an unset RTC (an uptime), so
+// we track the 100s and 1000s ourselves.
+static time_year_t year_base = 0;
 
 static uint_fast8_t cfg_enabled = 0;
 
@@ -308,7 +309,8 @@ static utime_t _get_RTC_seconds(void) {
 	second = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_SU_Pos));
 
 	year  = bcd_to_byte(GATHER_BITS(dr, 0xFFU, RTC_DR_YU_Pos));
-	year -= YEAR_CORRECTION;
+	// The RTC only stores 2 digit years
+	year += year_base;
 	month = bcd_to_byte(GATHER_BITS(dr, 0x1FU, RTC_DR_MU_Pos));
 	day   = bcd_to_byte(GATHER_BITS(dr, 0x3FU, RTC_DR_DU_Pos));
 
@@ -317,11 +319,15 @@ static utime_t _get_RTC_seconds(void) {
 static err_t _set_RTC_seconds(utime_t s) {
 	uint32_t tr, dr;
 	uint8_t hour, minute, second;
-	uint8_t year, month, day;
+	uint8_t month, day;
+	time_year_t year;
 
 	seconds_to_time(s, &hour, &minute, &second);
 	seconds_to_date(s, &year, &month, &day);
-	year += YEAR_CORRECTION;
+	// The RTC only stores 2 digit years
+	time_year_t tmp_year = year;
+	year = year % 100;
+	year_base = tmp_year - year;
 
 	wait_for_sync();
 

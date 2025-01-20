@@ -275,7 +275,8 @@ void print_system_info(void) {
 #endif
 
 #if ! uHAL_USE_SMALL_MESSAGES
-	uint8_t year, month, day, hour, minute, second;
+	uint8_t month, day, hour, minute, second;
+	time_year_t year;
 	utime_t seconds;
 
 	seconds = get_RTC_seconds();
@@ -284,7 +285,7 @@ void print_system_info(void) {
 
 	PRINTF("Build Date: %s PlatformIO: %u\r\n", BUILD_DATE, (uint )PLATFORMIO);
 	PRINTF("Current system time is %04u.%02u.%02u %02u:%02u:%02u\r\n",
-		(uint )(TIME_YEAR_0 + year),
+		(uint )year,
 		(uint )month,
 		(uint )day,
 		(uint )hour,

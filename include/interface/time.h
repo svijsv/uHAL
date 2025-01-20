@@ -81,7 +81,7 @@ err_t set_time(uint8_t hour, uint8_t minute, uint8_t second);
 ///
 /// @returns ERR_OK if successful, otherwise an error code indicating
 ///  the nature of the problem encountered.
-err_t set_date(uint8_t year, uint8_t month, uint8_t day);
+err_t set_date(uint_fast16_t year, uint8_t month, uint8_t day);
 
 ///
 /// Set the system time enumerated in seconds.

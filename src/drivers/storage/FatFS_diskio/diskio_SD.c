@@ -714,14 +714,15 @@ DRESULT disk_ioctl (BYTE lun, BYTE cmd, void *buf) {
 // http:// www.elm-chan.org/fsw/ff/doc/fattime.html
 DWORD get_fattime (void) {
 	uint32_t now, fatnow;
-	uint8_t year, month, day, hour, minute, second;
+	time_year_t year;
+	uint8_t month, day, hour, minute, second;
 
 	now = NOW();
 	seconds_to_date(now, &year, &month, &day);
 	seconds_to_time(now, &hour, &minute, &second);
 
 	// bit31:25 Year origin from the 1980 (0..127, e.g. 37 for 2017)
-	fatnow = (uint32_t )((((uint32_t )year + TIME_YEAR_0)) - 1980U) << 25U;
+	fatnow = (uint32_t )((uint32_t )year - 1980U) << 25U;
 	// bit24:21 Month (1..12)
 	fatnow |= (uint32_t )month << 21U;
 	// bit20:16 Day of the month (1..31)
