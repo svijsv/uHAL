@@ -258,6 +258,8 @@ void RTC_init(void) {
 		CLEAR_BIT(RTC->ISR, RTC_ISR_INIT);
 	}
 
+	year_base = RTC->RTC_BKP_DATE;
+
 	wait_for_sync();
 	cfg_disable();
 	NVIC_SetPriority(RTC_Alarm_IRQn, RTC_ALARM_IRQp);
@@ -329,8 +331,6 @@ static err_t _set_RTC_seconds(utime_t s) {
 	year = year % 100;
 	year_base = tmp_year - year;
 
-	wait_for_sync();
-
 	tr =
 		((uint32_t )byte_to_bcd(hour)   << RTC_TR_HU_Pos) |
 		((uint32_t )byte_to_bcd(minute) << RTC_TR_MNU_Pos) |
@@ -343,6 +343,7 @@ static err_t _set_RTC_seconds(utime_t s) {
 	calendarcfg_enable();
 	MODIFY_BITS(RTC->TR, RTC_TR_TIME_MASK, tr);
 	MODIFY_BITS(RTC->DR, RTC_DR_DATE_MASK, dr);
+	RTC->RTC_BKP_DATE = year_base;
 	calendarcfg_disable();
 
 	return ERR_OK;
