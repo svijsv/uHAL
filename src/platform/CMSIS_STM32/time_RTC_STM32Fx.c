@@ -77,12 +77,21 @@ bool RTC_alarm_is_set(void) {
 #if uHAL_USE_RTC
 static err_t _set_RTC_seconds(utime_t s);
 static utime_t _get_RTC_seconds(void);
+static err_t _set_RTC_datetime(const datetime_t *datetime);
+static err_t _get_RTC_datetime(datetime_t *datetime);
 
 err_t set_RTC_seconds(utime_t s) {
 	return _set_RTC_seconds(s);
 }
 utime_t get_RTC_seconds(void) {
 	return _get_RTC_seconds();
+}
+
+err_t set_RTC_datetime(const datetime_t *datetime) {
+	return _set_RTC_datetime(datetime);
+}
+err_t get_RTC_datetime(datetime_t *datetime) {
+	return _get_RTC_datetime(datetime);
 }
 #endif
 
@@ -283,10 +292,14 @@ static void calendarcfg_enable(void) {
 	return;
 }
 
-static utime_t _get_RTC_seconds(void) {
+
+err_t _get_RTC_datetime(datetime_t *datetime) {
 	uint32_t tr, dr;
-	uint_fast8_t hour, minute, second;
-	uint_fast8_t year, month, day;
+
+	assert(datetime != NULL);
+	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
+		return ERR_BADARG;
+	}
 
 	wait_for_sync();
 
@@ -306,53 +319,84 @@ static utime_t _get_RTC_seconds(void) {
 	dr = RTC->DR;
 #endif
 
-	hour   = bcd_to_byte(GATHER_BITS(tr, 0x3FU, RTC_TR_HU_Pos));
-	minute = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_MNU_Pos));
-	second = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_SU_Pos));
+	datetime->hour   = bcd_to_byte(GATHER_BITS(tr, 0x3FU, RTC_TR_HU_Pos));
+	datetime->minute = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_MNU_Pos));
+	datetime->second = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_SU_Pos));
 
-	year  = bcd_to_byte(GATHER_BITS(dr, 0xFFU, RTC_DR_YU_Pos));
 	// The RTC only stores 2 digit years
-	year += year_base;
-	month = bcd_to_byte(GATHER_BITS(dr, 0x1FU, RTC_DR_MU_Pos));
-	day   = bcd_to_byte(GATHER_BITS(dr, 0x3FU, RTC_DR_DU_Pos));
+	datetime->year  = bcd_to_byte(GATHER_BITS(dr, 0xFFU, RTC_DR_YU_Pos)) + year_base;
+	datetime->month = bcd_to_byte(GATHER_BITS(dr, 0x1FU, RTC_DR_MU_Pos));
+	datetime->day   = bcd_to_byte(GATHER_BITS(dr, 0x3FU, RTC_DR_DU_Pos));
 
-	return date_to_seconds(year, month, day) + time_to_seconds(hour, minute, second);
+	return ERR_OK;
 }
-static err_t _set_RTC_seconds(utime_t s) {
-	uint32_t tr, dr;
-	uint8_t hour, minute, second;
-	uint8_t month, day;
-	time_year_t year;
+static utime_t _get_RTC_seconds(void) {
+	datetime_t datetime;
 
-	seconds_to_time(s, &hour, &minute, &second);
-	seconds_to_date(s, &year, &month, &day);
-	// The RTC only stores 2 digit years
-	time_year_t tmp_year = year;
-	year = year % 100;
-	year_base = tmp_year - year;
+	if (_get_RTC_datetime(&datetime) == ERR_OK) {
+		return datetime_to_seconds(&datetime);
+	}
+	return 0;
+}
 
-	tr =
-		((uint32_t )byte_to_bcd(hour)   << RTC_TR_HU_Pos) |
-		((uint32_t )byte_to_bcd(minute) << RTC_TR_MNU_Pos) |
-		((uint32_t )byte_to_bcd(second) << RTC_TR_SU_Pos);
-	dr =
-		((uint32_t )byte_to_bcd(year)  << RTC_DR_YU_Pos) |
-		((uint32_t )byte_to_bcd(month) << RTC_DR_MU_Pos) |
-		((uint32_t )byte_to_bcd(day)   << RTC_DR_DU_Pos);
+err_t _set_RTC_datetime(const datetime_t *datetime) {
+	uint32_t tr = 0, dr = 0;
+
+	assert(datetime != NULL);
+	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
+		return ERR_BADARG;
+	}
+
+	// Only change the date if it's set in the new structure
+	if ((datetime->year | datetime->month | datetime->day) != 0) {
+		assert((IS_IN_RANGE(datetime->month, 1, 12)) && (IS_IN_RANGE(datetime->day, 1, 31)));
+		if (!uHAL_SKIP_INVALID_ARG_CHECKS && ((!IS_IN_RANGE(datetime->month, 1, 12)) || (!IS_IN_RANGE(datetime->day, 1, 31)))) {
+			return ERR_BADARG;
+		}
+
+		// The RTC only stores 2 digit years
+		uint_fast8_t year = datetime->year % 100;
+		year_base = datetime->year - year;
+		dr =
+			((uint32_t )byte_to_bcd(year)            << RTC_DR_YU_Pos) |
+			((uint32_t )byte_to_bcd(datetime->month) << RTC_DR_MU_Pos) |
+			((uint32_t )byte_to_bcd(datetime->day)   << RTC_DR_DU_Pos);
+	}
+
+	// Only change the time if it's set in the new structure
+	if ((datetime->hour | datetime->minute | datetime->second) != 0) {
+		assert((datetime->hour <= 23) || (datetime->minute <= 59) || (datetime->second <= 59));
+		if (!uHAL_SKIP_INVALID_ARG_CHECKS && ((datetime->hour > 23) || (datetime->minute > 59) || (datetime->second > 59))) {
+			return ERR_BADARG;
+		}
+		tr =
+			((uint32_t )byte_to_bcd(datetime->hour)   << RTC_TR_HU_Pos) |
+			((uint32_t )byte_to_bcd(datetime->minute) << RTC_TR_MNU_Pos) |
+			((uint32_t )byte_to_bcd(datetime->second) << RTC_TR_SU_Pos);
+	}
 
 	calendarcfg_enable();
-	MODIFY_BITS(RTC->TR, RTC_TR_TIME_MASK, tr);
-	MODIFY_BITS(RTC->DR, RTC_DR_DATE_MASK, dr);
-	RTC->RTC_BKP_DATE = year_base;
+	if (tr != 0) {
+		MODIFY_BITS(RTC->TR, RTC_TR_TIME_MASK, tr);
+	}
+	if (dr != 0) {
+		MODIFY_BITS(RTC->DR, RTC_DR_DATE_MASK, dr);
+		RTC->RTC_BKP_DATE = year_base;
+	}
 	calendarcfg_disable();
 
 	return ERR_OK;
+}
+static err_t _set_RTC_seconds(utime_t s) {
+	datetime_t datetime;
+
+	seconds_to_datetime(s, &datetime);
+	return _set_RTC_datetime(&datetime);
 }
 
 #if uHAL_USE_HIBERNATE
 void set_RTC_alarm(utime_t time) {
 	uint32_t tr, tmp;
-	uint8_t hour, minute, second;
 
 	assert(time <= HIBERNATE_MAX_S);
 	// We only look at the time part of the clock when setting the alarm to
@@ -383,16 +427,17 @@ void set_RTC_alarm(utime_t time) {
 
 	wait_for_sync();
 
+	datetime_t dt;
 	tr = RTC->TR;
-	hour   = bcd_to_byte(GATHER_BITS(tr, 0x3FU, RTC_TR_HU_Pos));
-	minute = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_MNU_Pos));
-	second = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_SU_Pos));
+	dt.hour   = bcd_to_byte(GATHER_BITS(tr, 0x3FU, RTC_TR_HU_Pos));
+	dt.minute = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_MNU_Pos));
+	dt.second = bcd_to_byte(GATHER_BITS(tr, 0x7FU, RTC_TR_SU_Pos));
 
-	tmp = time + time_to_seconds(hour, minute, second);
-	seconds_to_time(tmp, &hour, &minute, &second);
-	hour   = byte_to_bcd(hour);
-	minute = byte_to_bcd(minute);
-	second = byte_to_bcd(second);
+	tmp = time + time_to_seconds(&dt);
+	seconds_to_time(tmp, &dt);
+	dt.hour   = byte_to_bcd(dt.hour);
+	dt.minute = byte_to_bcd(dt.minute);
+	dt.second = byte_to_bcd(dt.second);
 
 	cfg_enable();
 	// The documentation is unclear with regard to whether one or both of
@@ -404,13 +449,13 @@ void set_RTC_alarm(utime_t time) {
 	}
 
 	RTC->ALRMAR = (
-		(0b1U   << RTC_ALRMAR_MSK4_Pos) | // Ignore date part of the alarm
-		(0b0U   << RTC_ALRMAR_MSK3_Pos) | // Use hour
-		(hour   << RTC_ALRMAR_HU_Pos)   | // Set hour
-		(0b0U   << RTC_ALRMAR_MSK2_Pos) | // Use minute
-		(minute << RTC_ALRMAR_MNU_Pos)  | // Set minute
-		(0b0U   << RTC_ALRMAR_MSK1_Pos) | // Use second
-		(second << RTC_ALRMAR_SU_Pos)   | // Set second
+		(0b1U  << RTC_ALRMAR_MSK4_Pos) | // Ignore date part of the alarm
+		(0b0U  << RTC_ALRMAR_MSK3_Pos) | // Use hour
+		(0b0U  << RTC_ALRMAR_MSK2_Pos) | // Use minute
+		(0b0U  << RTC_ALRMAR_MSK1_Pos) | // Use second
+		((uint_t )dt.hour   << RTC_ALRMAR_HU_Pos)   | // Set hour
+		((uint_t )dt.minute << RTC_ALRMAR_MNU_Pos)  | // Set minute
+		((uint_t )dt.second << RTC_ALRMAR_SU_Pos)   | // Set second
 		0);
 
 	// Clear the alarm interrupt flag

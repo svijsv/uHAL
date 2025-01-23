@@ -23,6 +23,8 @@
 ///    This file should only be included by interface.h.
 ///
 
+#include "ulib/include/time.h"
+
 ///
 /// @name SYSTICK Interface.
 /// @{
@@ -62,26 +64,26 @@ bool systick_is_enabled(void);
 //
 #if uHAL_USE_RTC || __HAVE_DOXYGEN__
 ///
-/// Set system time
+/// Set system date/time
 ///
-/// @param hour The hour part of the new system time, in the range 0-23.
-/// @param minute The minute part of the new system time.
-/// @param second The second part of the new system time.
+/// @param datetime The new system date/time. Must not be NULL.
+///
+/// @info If the year, month, and day are all 0, the date isn't set.
+/// @info If the hour, minute, and second are all 0, the time isn't set.
 ///
 /// @returns ERR_OK if successful, otherwise an error code indicating
 ///  the nature of the problem encountered.
-err_t set_time(uint8_t hour, uint8_t minute, uint8_t second);
+err_t set_RTC_datetime(const datetime_t *datetime);
 
 ///
-/// Set system date
+/// Read the system date/time
 ///
-/// @param year The last 2 digits of the year part of the new system date.
-/// @param month The month part of the new system date.
-/// @param day The day part of the new system date.
+/// @param datetime The object used to return the current date/time. Must not
+/// be NULL.
 ///
 /// @returns ERR_OK if successful, otherwise an error code indicating
 ///  the nature of the problem encountered.
-err_t set_date(uint_fast16_t year, uint8_t month, uint8_t day);
+err_t get_RTC_datetime(datetime_t *datetime);
 
 ///
 /// Set the system time enumerated in seconds.

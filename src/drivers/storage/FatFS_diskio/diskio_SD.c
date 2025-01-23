@@ -713,26 +713,23 @@ DRESULT disk_ioctl (BYTE lun, BYTE cmd, void *buf) {
 //
 // http:// www.elm-chan.org/fsw/ff/doc/fattime.html
 DWORD get_fattime (void) {
-	uint32_t now, fatnow;
-	time_year_t year;
-	uint8_t month, day, hour, minute, second;
+	uint32_t fatnow;
+	datetime_t dt;
 
-	now = NOW();
-	seconds_to_date(now, &year, &month, &day);
-	seconds_to_time(now, &hour, &minute, &second);
+	get_RTC_datetime(&dt);
 
 	// bit31:25 Year origin from the 1980 (0..127, e.g. 37 for 2017)
-	fatnow = (uint32_t )((uint32_t )year - 1980U) << 25U;
+	fatnow = (uint32_t )((uint32_t )dt.year - 1980U) << 25U;
 	// bit24:21 Month (1..12)
-	fatnow |= (uint32_t )month << 21U;
+	fatnow |= (uint32_t )dt.month << 21U;
 	// bit20:16 Day of the month (1..31)
-	fatnow |= (uint32_t )day << 16U;
+	fatnow |= (uint32_t )dt.day << 16U;
 	// bit15:11 Hour (0..23)
-	fatnow |= (uint32_t )hour << 11U;
+	fatnow |= (uint32_t )dt.hour << 11U;
 	// bit10:5 Minute (0..59)
-	fatnow |= (uint32_t )minute << 5U;
+	fatnow |= (uint32_t )dt.minute << 5U;
 	// bit4:0 Second / 2 (0..29, e.g. 25 for 50) 
-	fatnow |= (uint32_t )(second/2U);
+	fatnow |= (uint32_t )(dt.second/2U);
 
 	return fatnow;
 }

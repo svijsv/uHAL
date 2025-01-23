@@ -275,22 +275,18 @@ void print_system_info(void) {
 #endif
 
 #if ! uHAL_USE_SMALL_MESSAGES
-	uint8_t month, day, hour, minute, second;
-	time_year_t year;
-	utime_t seconds;
+	datetime_t dt;
 
-	seconds = get_RTC_seconds();
-	seconds_to_date(seconds, &year, &month, &day);
-	seconds_to_time(seconds, &hour, &minute, &second);
+	get_RTC_datetime(&dt);
 
 	PRINTF("Build Date: %s PlatformIO: %u\r\n", BUILD_DATE, (uint )PLATFORMIO);
 	PRINTF("Current system time is %04u.%02u.%02u %02u:%02u:%02u\r\n",
-		(uint )year,
-		(uint )month,
-		(uint )day,
-		(uint )hour,
-		(uint )minute,
-		(uint )second
+		(uint )dt.year,
+		(uint )dt.month,
+		(uint )dt.day,
+		(uint )dt.hour,
+		(uint )dt.minute,
+		(uint )dt.second
 	);
 # if uHAL_USE_FATFS
 	PRINTF("Using FatFS revision %u\r\n", (uint )FFCONF_DEF);

@@ -343,6 +343,7 @@ static int terminalcmd_set_time(const char *line_in) {
 		}
 	}
 
+	datetime_t new_datetime = { 0 };
 	if (use_date) {
 		if (year < 100) {
 			year += 2000;
@@ -351,17 +352,22 @@ static int terminalcmd_set_time(const char *line_in) {
 		if (!uHAL_USE_SMALL_MESSAGES) {
 			PRINTF("Setting date to %u.%02u.%02u\r\n", (uint )(year), (uint )month, (uint )day);
 		}
-		err = set_date(year, month, day);
+		new_datetime.year  = year;
+		new_datetime.month = month;
+		new_datetime.day   = day;
 	}
-	if (use_time && err == ERR_OK) {
+	if (use_time) {
 		if (!uHAL_USE_SMALL_MESSAGES) {
 			PRINTF("Setting time to %02u:%02u:%02u\r\n", (uint )hour, (uint )minute, (uint )second);
 		}
-		err = set_time(hour, minute, second);
+		new_datetime.hour   = hour;
+		new_datetime.minute = minute;
+		new_datetime.second = second;
 	}
+	err = set_RTC_datetime(&new_datetime);
 	if (err != ERR_OK) {
 		if (!uHAL_USE_SMALL_MESSAGES) {
-			PRINTF("   Error %d while setting time\r\n", (int )err);
+			PRINTF("   Error %d while setting date/time\r\n", (int )err);
 		} else {
 			PRINTF("   Error %d\r\n", (int )err);
 		}

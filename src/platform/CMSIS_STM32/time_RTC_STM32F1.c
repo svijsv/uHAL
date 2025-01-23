@@ -24,6 +24,10 @@
 //    much between the STM32F1 and the other lines that code can't really be
 //    reused
 //
+//    When writing to the RTC counter, trying to check the writes immediately
+//    will lead to an infinite loop because the registers aren't updated immediately
+//
+
 #include "common.h"
 
 #if HAVE_STM32F1_RTC
@@ -46,6 +50,9 @@ bool RTC_alarm_is_set(void) {
 }
 #endif
 
+// This is defined in src/RTC.c
+err_t set_RTC_datetime_for_second_counters(const datetime_t *datetime);
+
 // We need the internal RTC stuff to wake up from sleep so we only enable
 // the interface shims
 #if uHAL_USE_RTC
@@ -57,6 +64,19 @@ err_t set_RTC_seconds(utime_t s) {
 }
 utime_t get_RTC_seconds(void) {
 	return _get_RTC_seconds();
+}
+
+err_t set_RTC_datetime(const datetime_t *datetime) {
+	return set_RTC_datetime_for_second_counters(datetime);
+}
+err_t get_RTC_datetime(datetime_t *datetime) {
+	assert(datetime != NULL);
+	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
+		return ERR_BADARG;
+	}
+
+	seconds_to_datetime(get_RTC_seconds(), datetime);
+	return ERR_OK;
 }
 #endif
 
@@ -181,7 +201,7 @@ void set_RTC_prediv(uint32_t psc) {
 	);
 
 	psc -= (1U + adj_psc);
-	WRITE_SPLITREG32(psc, RTC->PRLH, RTC->PRLL);
+	WRITE_SPLIT32(RTC->PRLH, RTC->PRLL, psc);
 
 	cfg_disable();
 
@@ -199,7 +219,7 @@ void set_RTC_prediv(uint32_t psc) {
 	if (psc > 0) {
 		psc -= 1U;
 	}
-	WRITE_SPLITREG32(psc, RTC->PRLH, RTC->PRLL);
+	WRITE_SPLIT32(RTC->PRLH, RTC->PRLL, psc);
 
 	cfg_disable();
 
@@ -231,13 +251,13 @@ static utime_t _get_RTC_seconds(void) {
 	uint32_t rtcs;
 
 	wait_for_sync();
-	READ_SPLITREG32(rtcs, RTC->CNTH, RTC->CNTL);
+	READ_SPLIT32(rtcs, RTC->CNTH, RTC->CNTL);
 
 	return rtcs;
 }
 static err_t _set_RTC_seconds(utime_t s) {
 	cfg_enable();
-	WRITE_SPLITREG32(s, RTC->CNTH, RTC->CNTL);
+	WRITE_SPLIT32(RTC->CNTH, RTC->CNTL, s);
 	cfg_disable();
 
 	return ERR_OK;
@@ -251,7 +271,7 @@ void set_RTC_alarm(utime_t time) {
 
 	cfg_enable();
 	time = _get_RTC_seconds() + time;
-	WRITE_SPLITREG32(time, RTC->ALRH, RTC->ALRL);
+	WRITE_SPLIT32(RTC->ALRH, RTC->ALRL, time);
 
 	// Clear the alarm interrupt flag
 	CLEAR_BIT(RTC->CRL, RTC_CRL_ALRF);
