@@ -288,6 +288,9 @@ void print_system_info(void) {
 		(uint )dt.minute,
 		(uint )dt.second
 	);
+#if uHAL_USE_UPTIME
+	PRINTF("Current system uptime is %s\r\n", print_uptime(get_uptime()));
+#endif
 # if uHAL_USE_FATFS
 	PRINTF("Using FatFS revision %u\r\n", (uint )FFCONF_DEF);
 # endif

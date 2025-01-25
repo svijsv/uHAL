@@ -294,6 +294,14 @@
 #endif
 
 //
+// Uptime tracking configuration
+//
+// Enable uptime tracking
+#ifndef uHAL_USE_UPTIME
+# define uHAL_USE_UPTIME uHAL_USE_SUBSYSTEM_DEFAULT
+#endif
+
+//
 // Micro-second counter configuration
 //
 // Enable the micro-second counter

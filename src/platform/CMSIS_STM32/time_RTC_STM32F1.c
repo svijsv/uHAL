@@ -51,7 +51,7 @@ bool RTC_alarm_is_set(void) {
 #endif
 
 // This is defined in src/RTC.c
-err_t set_RTC_datetime_for_second_counters(const datetime_t *datetime);
+utime_t RTC_datetime_to_second_counter(const datetime_t *datetime, utime_t now);
 
 // We need the internal RTC stuff to wake up from sleep so we only enable
 // the interface shims
@@ -67,7 +67,7 @@ utime_t get_RTC_seconds(void) {
 }
 
 err_t set_RTC_datetime(const datetime_t *datetime) {
-	return set_RTC_datetime_for_second_counters(datetime);
+	return _set_RTC_seconds(RTC_datetime_to_second_counter(datetime, get_RTC_seconds()));
 }
 err_t get_RTC_datetime(datetime_t *datetime) {
 	assert(datetime != NULL);
@@ -256,6 +256,10 @@ static utime_t _get_RTC_seconds(void) {
 	return rtcs;
 }
 static err_t _set_RTC_seconds(utime_t s) {
+#if uHAL_USE_UPTIME_EMULATION
+	fix_uptime(s, _get_RTC_seconds());
+#endif
+
 	cfg_enable();
 	WRITE_SPLIT32(RTC->CNTH, RTC->CNTL, s);
 	cfg_disable();

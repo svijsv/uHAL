@@ -31,12 +31,12 @@
 // Utility functions for handling the date and time on systems that use second-
 // counter-based RTCs
 // These aren't in any headers, the prototypes should be copied into the files that use them.
-err_t set_RTC_datetime_for_second_counters(const datetime_t *datetime) {
-	utime_t new_now = 0, now = get_RTC_seconds();
+utime_t RTC_datetime_to_second_counter(const datetime_t *datetime, utime_t now) {
+	utime_t new_now = 0;
 
 	assert(datetime != NULL);
 	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
-		return ERR_BADARG;
+		return 0;
 	}
 
 	// Only change the date if it's set in the new structure
@@ -63,9 +63,9 @@ err_t set_RTC_datetime_for_second_counters(const datetime_t *datetime) {
 
 	// Use set_RTC_seconds() directly if you want to reset the clock.
 	if (!uHAL_SKIP_OTHER_CHECKS && new_now == 0) {
-		return ERR_BADARG;
+		return 0;
 	}
-	return set_RTC_seconds(new_now);
+	return new_now;
 }
 
 #if uHAL_USE_RTC_EMULATION
@@ -116,6 +116,10 @@ utime_t get_RTC_seconds(void) {
 	return RTC_ticks;
 }
 err_t set_RTC_seconds(utime_t s) {
+#if uHAL_USE_UPTIME_EMULATION
+	fix_uptime(s, get_RTC_seconds());
+#endif
+
 	RTC_ticks = s;
 	RTC_prev_msticks = NOW_MS();
 	RTC_millis = 0;
@@ -124,7 +128,7 @@ err_t set_RTC_seconds(utime_t s) {
 }
 
 err_t set_RTC_datetime(const datetime_t *datetime) {
-	return set_RTC_datetime_for_second_counters(datetime);
+	return set_RTC_seconds(RTC_datetime_to_second_counter(datetime, get_RTC_seconds()));
 }
 err_t get_RTC_datetime(datetime_t *datetime) {
 	assert(datetime != NULL);

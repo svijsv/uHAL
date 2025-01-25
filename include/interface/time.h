@@ -58,11 +58,11 @@ bool systick_is_enabled(void);
 /// @}
 
 
+#if uHAL_USE_RTC || __HAVE_DOXYGEN__
 ///
 /// @name Real-Time Clock Interface.
 /// @{
 //
-#if uHAL_USE_RTC || __HAVE_DOXYGEN__
 ///
 /// Set system date/time
 ///
@@ -123,7 +123,7 @@ void add_RTC_millis(uint_fast16_t ms);
 void subtract_RTC_millis(uint_fast16_t ms);
 #endif // uHAL_USE_RTC_EMULATION
 
-#ifndef NOW
+#if ! defined(NOW) || __HAVE_DOXYGEN__
 ///
 /// Get the system time enumerated in seconds.
 ///
@@ -136,10 +136,72 @@ void subtract_RTC_millis(uint_fast16_t ms);
 ///
 /// An alias for @c NOW() required by @c ulib.
 #define RTCTICKS NOW()
-
-#endif // uHAL_USE_RTC
 /// @}
+#endif // uHAL_USE_RTC
 
+#if uHAL_USE_UPTIME || __HAVE_DOXYGEN__
+///
+/// @name Uptime Counter Interface.
+/// @{
+///
+/// Initialize the uptime counter.
+///
+/// This will normally be called by the platform initialization code.
+///
+/// @returns ERR_OK if successful, otherwise an error code indicating
+///  the nature of the problem encountered.
+err_t init_uptime(void);
+
+///
+/// Set the uptime counter.
+///
+/// @param uptime_seconds The number of seconds to set the counter to.
+///
+/// @returns ERR_OK if successful, otherwise an error code indicating
+///  the nature of the problem encountered.
+err_t set_uptime(utime_t uptime_seconds);
+
+///
+/// Adjust the uptime counter.
+///
+/// @param adjustment_seconds The number of seconds to adjust the counter by.
+///
+/// @returns ERR_OK if successful, otherwise an error code indicating
+///  the nature of the problem encountered.
+err_t adj_uptime(itime_t adjustment_seconds);
+
+#if uHAL_USE_UPTIME_EMULATION || __HAVE_DOXYGEN__
+///
+/// Fix the uptime counter after an RTC update.
+///
+/// @attention This is only used for emulated uptime counters.
+///
+/// @param new_now The new value of the RTC in seconds.
+/// @param old_now The previous value of the RTC in seconds.
+///
+/// @returns ERR_OK if successful, otherwise an error code indicating
+///  the nature of the problem encountered.
+err_t fix_uptime(utime_t new_now, utime_t old_now);
+#endif
+
+///
+/// Return the uptime counter.
+///
+/// @returns The number of seconds which have elapsed since the system booted.
+utime_t get_uptime(void);
+
+///
+/// Print an uptime duration in the format @c DDDDd:HHh:MMm:SSs
+///
+/// @attention This returns an internal buffer which must be duplicated if
+/// it's to be used after a subsequent call to this function.
+///
+/// @param seconds The duration to print.
+///
+/// @returns A C string containting the printed duration.
+const char* print_uptime(utime_t seconds);
+/// @}
+#endif // uHAL_USE_UPTIME
 
 ///
 /// @name Microsecond Counter Interface.

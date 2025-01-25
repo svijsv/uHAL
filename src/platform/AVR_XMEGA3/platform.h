@@ -158,6 +158,9 @@
 #ifndef uHAL_USE_RTC_EMULATION
 # define uHAL_USE_RTC_EMULATION uHAL_USE_RTC
 #endif
+#ifndef uHAL_USE_UPTIME_EMULATION
+# define uHAL_USE_UPTIME_EMULATION uHAL_USE_UPTIME
+#endif
 
 
 typedef struct {

@@ -122,6 +122,10 @@ DEBUG_CPP_MACRO(F_OSC / F_CORE);
 
 	time_init();
 
+#if uHAL_USE_UPTIME
+	init_uptime();
+#endif
+
 #if uHAL_USE_UART_COMM
 	const uart_port_cfg_t uart_cfg = {
 		.rx_pin = UART_COMM_RX_PIN,
