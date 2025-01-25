@@ -25,24 +25,19 @@
 
 #include "ulib/include/time.h"
 
-///
-/// @name SYSTICK Interface.
-/// @{
-//
-///
-/// Enable the system millisecond tick.
-void enable_systick(void);
-///
-/// Disable the system millisecond tick.
-void disable_systick(void);
-///
-/// Check if the systick is enabled.
-///
-/// @retval true if turned on.
-/// @retval false if turned off.
-bool systick_is_enabled(void);
 
 #if __HAVE_DOXYGEN__
+///
+/// Get the system time enumerated in seconds.
+///
+/// This updates even during sleep.
+///
+/// @attention This may return either the system time or the system uptime
+///  depending on configuration.
+///
+/// @attention This may be lower for a later read if the system time was changed
+///  in the meantime.
+# define NOW()
 ///
 /// Read the systick counter.
 ///
@@ -51,10 +46,39 @@ bool systick_is_enabled(void);
 /// @attention
 /// This will not increase during sleep.
 # define NOW_MS()
-#endif
+#else
+# if ! defined(NOW)
+#  if uHAL_USE_RTC
+#   define NOW() (get_RTC_seconds())
+#  elif uHAL_USE_UPTIME
+#   define NOW() (get_RTC_seconds())
+#  endif
+# endif
 ///
 /// An alias for @c NOW_MS() required by @c ulib.
-#define GET_SYSTICKS_MS() NOW_MS()
+# define GET_SYSTICKS_MS() NOW_MS()
+///
+/// An alias for @c NOW() required by @c ulib.
+# define RTCTICKS NOW()
+#endif
+
+
+///
+/// @name SYSTICK Interface.
+/// @{
+//
+///
+/// Enable the system millisecond tick counter.
+void enable_systick(void);
+///
+/// Disable the system millisecond tick counter.
+void disable_systick(void);
+///
+/// Check if the systick counter is enabled.
+///
+/// @retval true if turned on.
+/// @retval false if turned off.
+bool systick_is_enabled(void);
 /// @}
 
 
@@ -68,8 +92,8 @@ bool systick_is_enabled(void);
 ///
 /// @param datetime The new system date/time. Must not be NULL.
 ///
-/// @info If the year, month, and day are all 0, the date isn't set.
-/// @info If the hour, minute, and second are all 0, the time isn't set.
+/// @note If the year, month, and day are all @c 0, the date isn't set.
+/// @note If the hour, minute, and second are all @c 0, the time isn't set.
 ///
 /// @returns ERR_OK if successful, otherwise an error code indicating
 ///  the nature of the problem encountered.
@@ -122,20 +146,6 @@ void add_RTC_millis(uint_fast16_t ms);
 /// @param ms The number of milliseconds to add to the RTC.
 void subtract_RTC_millis(uint_fast16_t ms);
 #endif // uHAL_USE_RTC_EMULATION
-
-#if ! defined(NOW) || __HAVE_DOXYGEN__
-///
-/// Get the system time enumerated in seconds.
-///
-/// This updates even during sleep.
-///
-/// @attention This may be lower for a later read if the system time was set
-/// in the meantime.
-# define NOW() (get_RTC_seconds())
-#endif
-///
-/// An alias for @c NOW() required by @c ulib.
-#define RTCTICKS NOW()
 /// @}
 #endif // uHAL_USE_RTC
 
@@ -143,7 +153,7 @@ void subtract_RTC_millis(uint_fast16_t ms);
 ///
 /// @name Uptime Counter Interface.
 /// @{
-///
+//
 /// Initialize the uptime counter.
 ///
 /// This will normally be called by the platform initialization code.
@@ -185,13 +195,13 @@ err_t fix_uptime(utime_t new_now, utime_t old_now);
 #endif
 
 ///
-/// Return the uptime counter.
+/// Return the system uptime in seconds.
 ///
 /// @returns The number of seconds which have elapsed since the system booted.
 utime_t get_uptime(void);
 
 ///
-/// Print an uptime duration in the format @c DDDDd:HHh:MMm:SSs
+/// Print an uptime duration in the format @c DDDDdHHhMMmSSs
 ///
 /// @attention This returns an internal buffer which must be duplicated if
 /// it's to be used after a subsequent call to this function.

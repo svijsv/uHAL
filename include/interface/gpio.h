@@ -238,10 +238,8 @@ typedef enum {
 	/// Trigger on falling edge.
 	GPIO_TRIGGER_FALLING = 0x02U,
 } irq_trigger_t;
-
 ///
 /// Define the configuration of a GPIO-generated interrupt.
-///
 typedef struct {
 	///
 	/// The pin that generates the IRQ.
@@ -251,7 +249,6 @@ typedef struct {
 	/// This may be multiple trigger states ORd together.
 	irq_trigger_t trigger;
 } gpio_listen_cfg_t;
-
 ///
 /// Prepare a pin for interrupt triggering.
 ///
@@ -502,6 +499,7 @@ err_t input_pin_listen_off(gpio_listen_t *handle);
 #if uHAL_USE_EXPERIMENTAL_GPIO_INTERFACE || __HAVE_DOXYGEN__
 ///
 /// @name Experimental GPIO High-Level Digital Interface
+/// @{
 ///
 /// @attention
 /// This interface should not be mixed with the mode or state setting functions of
@@ -515,7 +513,6 @@ err_t input_pin_listen_off(gpio_listen_t *handle);
 /// in configuring, so it's relegated to EXPERMENTAL status until it can be tested
 /// and refined further.
 ///
-/// @{
 //
 ///
 /// The structure used to configure a GPIO pin.
@@ -549,7 +546,7 @@ typedef struct {
 #else // ! __HAVE_DOXYGEN__
 ///
 /// The handle used to manage a GPIO pin.
-typedef struct pinctrl_handle_t;
+typedef struct pinctrl_handle_t pinctrl_handle_t;
 #endif
 ///
 /// Initialize a @c pinctrl_handle_t based on a @c pinctrl_cfg_t struct.
