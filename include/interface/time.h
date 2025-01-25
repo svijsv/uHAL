@@ -203,13 +203,13 @@ utime_t get_uptime(void);
 ///
 /// Print an uptime duration in the format @c DDDDdHHhMMmSSs
 ///
-/// @attention This returns an internal buffer which must be duplicated if
-/// it's to be used after a subsequent call to this function.
-///
 /// @param seconds The duration to print.
+/// @param buf The buffer used to hold the string.
+/// @param buf_size The length of @c buf in bytes. This must be >= 12.
 ///
-/// @returns A C string containting the printed duration.
-const char* print_uptime(utime_t seconds);
+/// @returns A pointer to the start of the string within the buffer @c buf if
+///  successful or an empty string otherwise.
+const char* print_uptime(utime_t seconds, char *buf, uint_fast8_t buf_size);
 /// @}
 #endif // uHAL_USE_UPTIME
 

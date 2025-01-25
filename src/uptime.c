@@ -27,49 +27,58 @@
 
 #if uHAL_USE_UPTIME
 
-const char* print_uptime(utime_t seconds) {
-	// String big enough for "DDDDd:HHh:MMm:SSs" + terminal NUL
-	static char ret_cstring[18];
-	uint_t i = SIZEOF_ARRAY(ret_cstring);
+const char* print_uptime(utime_t seconds, char *buf, uint_fast8_t buf_size) {
+	uint_fast8_t i = buf_size;
 	uint32_t tmp;
 
-	// Prefix the decrement because we start i just past the terminal NUL above.
-	// This also means ret_cstring[i] is always our string start.
-	ret_cstring[--i] = 0;
+	assert(buf != NULL);
+	// Make sure string is large enough to hold 'DdHHhMMmSSs' + NUL byte.
+	assert(buf_size >= 12);
+	//assert(buf_size > 0);
+
+	if (!uHAL_SKIP_INVALID_ARG_CHECKS) {
+		if (buf == NULL || buf_size < 12) {
+			return "";
+		}
+	}
+
+	// Prefix the decrement because we start i just past the end of the array.
+	// This also means buf[i] is always our string start.
+	buf[--i] = 0;
 
 	tmp = seconds % SECONDS_PER_MINUTE;
-	ret_cstring[--i] = 's';
-	ret_cstring[--i] = (tmp % 10) + '0';
-	ret_cstring[--i] = (tmp / 10) + '0';
+	buf[--i] = 's';
+	buf[--i] = (tmp % 10) + '0';
+	buf[--i] = (tmp / 10) + '0';
 
 	tmp = (seconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE;
 	if (tmp == 0) {
 		goto END;
 	}
-	ret_cstring[--i] = 'm';
-	ret_cstring[--i] = (tmp % 10) + '0';
-	ret_cstring[--i] = (tmp / 10) + '0';
+	buf[--i] = 'm';
+	buf[--i] = (tmp % 10) + '0';
+	buf[--i] = (tmp / 10) + '0';
 
 	tmp = (seconds % SECONDS_PER_DAY) / SECONDS_PER_HOUR;
 	if (tmp == 0) {
 		goto END;
 	}
-	ret_cstring[--i] = 'h';
-	ret_cstring[--i] = (tmp % 10) + '0';
-	ret_cstring[--i] = (tmp / 10) + '0';
+	buf[--i] = 'h';
+	buf[--i] = (tmp % 10) + '0';
+	buf[--i] = (tmp / 10) + '0';
 
 	tmp = seconds / SECONDS_PER_DAY;
 	if (tmp == 0) {
 		goto END;
 	}
-	ret_cstring[--i] = 'd';
+	buf[--i] = 'd';
 	do {
-		ret_cstring[--i] = (tmp % 10) + '0';
+		buf[--i] = (tmp % 10) + '0';
 		tmp /= 10;
 	} while (tmp > 0 && i > 0);
 
 END:
-	return &ret_cstring[i];
+	return &buf[i];
 }
 
 
