@@ -107,7 +107,7 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:structgpio__listen__cfg__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the configuration of a GPIO-generated interrupt.  <a href="gpio_8h.html#structgpio__listen__cfg__t">More...</a><br /></td></tr>
 <tr class="separator:structgpio__listen__cfg__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structpinctrl__cfg__t" id="r_structpinctrl__cfg__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpio_8h.html#structpinctrl__cfg__t">pinctrl_cfg_t</a></td></tr>
-<tr class="memdesc:structpinctrl__cfg__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">The structure used to configure a GPIO pin.  <a href="gpio_8h.html#structpinctrl__cfg__t">More...</a><br /></td></tr>
+<tr class="memdesc:structpinctrl__cfg__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure used to configure a GPIO pin.  <a href="gpio_8h.html#structpinctrl__cfg__t">More...</a><br /></td></tr>
 <tr class="separator:structpinctrl__cfg__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">GPIO Basic Interface</h2></td></tr>
@@ -342,16 +342,15 @@ typedef struct <a class="el" href="gpio_8h.html#afc03cb9e9630374bbb8287ca6c0ae04
 <tr class="separator:a4e1aea8e896e2830a9c72f82d028dd30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Experimental GPIO High-Level Digital Interface</h2></td></tr>
-<tr><td class="ititle" colspan="2"><dl class="section attention"><dt>Attention</dt><dd>This interface should not be mixed with the mode or state setting functions of other GPIO interfaces because it tracks state. Calling <code><a class="el" href="gpio_8h.html#a4d3a62ffb95c196feb734390547be6e4" title="Initialize a pinctrl_handle_t based on a pinctrl_cfg_t struct.">pinctrl_init()</a></code> will put it back in order again if needed.</dd>
-<dd>
-This interface was intended to be a more runtime-efficient, reliable, and powerful replacement for the other high-level interface but seems to produce notably larger code at least in small test programs and requires a lot more overhead in configuring, so it's relegated to EXPERMENTAL status until it can be tested and refined further. </dd></dl>
+<tr><td class="ititle" colspan="2"><dl class="section attention"><dt>Attention</dt><dd>This interface should not be mixed with the mode or state setting functions of other GPIO interfaces because it tracks state. Calling <code><a class="el" href="gpio_8h.html#a4d3a62ffb95c196feb734390547be6e4" title="Initialize a pinctrl_handle_t based on a pinctrl_cfg_t struct.">pinctrl_init()</a></code> will put it back in order again if needed.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This interface was intended to be a more runtime-efficient, reliable, and powerful replacement for the other high-level interface but seems to produce notably larger code at least in small test programs and requires a lot more overhead in configuring, so it's relegated to EXPERMENTAL status until it can be tested and refined further. </dd></dl>
 </td></tr>
 <tr class="memitem:a4165b4410e648b3b4f82fb7935213a06" id="r_a4165b4410e648b3b4f82fb7935213a06"><td class="memItemLeft" align="right" valign="top"><a id="a4165b4410e648b3b4f82fb7935213a06" name="a4165b4410e648b3b4f82fb7935213a06"></a>
 typedef struct <a class="el" href="gpio_8h.html#a4165b4410e648b3b4f82fb7935213a06">pinctrl_handle_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pinctrl_handle_t</b></td></tr>
 <tr class="memdesc:a4165b4410e648b3b4f82fb7935213a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">The handle used to manage a GPIO pin. <br /></td></tr>
 <tr class="separator:a4165b4410e648b3b4f82fb7935213a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d3a62ffb95c196feb734390547be6e4" id="r_a4d3a62ffb95c196feb734390547be6e4"><td class="memItemLeft" align="right" valign="top">err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpio_8h.html#a4d3a62ffb95c196feb734390547be6e4">pinctrl_init</a> (<a class="el" href="gpio_8h.html#a4165b4410e648b3b4f82fb7935213a06">pinctrl_handle_t</a> *handle, const <a class="el" href="gpio_8h.html#structpinctrl__cfg__t">pinctrl_cfg_t</a> *cfg)</td></tr>
-<tr class="memdesc:a4d3a62ffb95c196feb734390547be6e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a <code>pinctrl_handle_t</code> based on a <code><a class="el" href="gpio_8h.html#structpinctrl__cfg__t" title="The structure used to configure a GPIO pin.">pinctrl_cfg_t</a></code> struct.  <br /></td></tr>
+<tr class="memdesc:a4d3a62ffb95c196feb734390547be6e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a <code>pinctrl_handle_t</code> based on a <code><a class="el" href="gpio_8h.html#structpinctrl__cfg__t" title="A structure used to configure a GPIO pin.">pinctrl_cfg_t</a></code> struct.  <br /></td></tr>
 <tr class="separator:a4d3a62ffb95c196feb734390547be6e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30e0ecf537479a79aa6d932d884c5064" id="r_a30e0ecf537479a79aa6d932d884c5064"><td class="memItemLeft" align="right" valign="top">err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpio_8h.html#a30e0ecf537479a79aa6d932d884c5064">pinctrl_init2_input</a> (<a class="el" href="gpio_8h.html#a4165b4410e648b3b4f82fb7935213a06">pinctrl_handle_t</a> *handle, <a class="el" href="gpio_8h.html#ace75a5937fba13a24bef9d8846be73fa">gpio_pin_t</a> pin)</td></tr>
 <tr class="memdesc:a30e0ecf537479a79aa6d932d884c5064"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a <code>pinctrl_handle_t</code> based on an input pin's control bits.  <br /></td></tr>
@@ -380,7 +379,7 @@ typedef struct <a class="el" href="gpio_8h.html#a4165b4410e648b3b4f82fb7935213a0
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>General-Purpose Input/Output Interface. </p>
-<dl class="section attention"><dt>Attention</dt><dd>This file should only be included by <a class="el" href="interface_8h.html" title="Interface between the frontend and backend code.">interface.h</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This file should only be included by <a class="el" href="interface_8h.html" title="Interface between the frontend and backend code.">interface.h</a>. </dd></dl>
 </div><hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structgpio__listen__cfg__t" id="structgpio__listen__cfg__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structgpio__listen__cfg__t">&#9670;&#160;</a></span>gpio_listen_cfg_t</h2>
@@ -424,7 +423,7 @@ The condition under which the IRQ should be generated. <p>This may be multiple t
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p>The structure used to configure a GPIO pin. </p>
+<div class="textblock"><p>A structure used to configure a GPIO pin. </p>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
@@ -621,9 +620,8 @@ If <code>true</code>, turn the pin ON when initialized. </td></tr>
 </div><div class="memdoc">
 
 <p>Read an input pin (kind of) quickly. </p>
-<dl class="section attention"><dt>Attention</dt><dd>The pin must be properly configured for digital input before calling.</dd>
-<dd>
-There are no safety checks with this macro.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The pin must be properly configured for digital input before calling.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>There are no safety checks with this macro.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">_pin_</td><td>The <code>gpio_pin_t</code> pin to read.</td></tr>
@@ -651,7 +649,7 @@ There are no safety checks with this macro.</dd></dl>
 </div><div class="memdoc">
 
 <p>Read a pin quickly. </p>
-<dl class="section attention"><dt>Attention</dt><dd><code>_qpin_</code> must be prepared with <code>gpio_quick_read_prepare()</code> prior to use.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd><code>_qpin_</code> must be prepared with <code>gpio_quick_read_prepare()</code> prior to use.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">_qpin_</td><td>The <code>gpio_quick_t</code> handle to read.</td></tr>
@@ -706,9 +704,8 @@ There are no safety checks with this macro.</dd></dl>
 </div><div class="memdoc">
 
 <p>Set an output pin HIGH (kind of) quickly. </p>
-<dl class="section attention"><dt>Attention</dt><dd>The pin must be properly configured for digital output before calling.</dd>
-<dd>
-There are no safety checks with this macro.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The pin must be properly configured for digital output before calling.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>There are no safety checks with this macro.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">_pin_</td><td>The <code>gpio_pin_t</code> pin to set. </td></tr>
@@ -735,9 +732,8 @@ There are no safety checks with this macro.</dd></dl>
 </div><div class="memdoc">
 
 <p>Set an output pin LOW (kind of) quickly. </p>
-<dl class="section attention"><dt>Attention</dt><dd>The pin must be properly configured for digital output before calling.</dd>
-<dd>
-There are no safety checks with this macro.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The pin must be properly configured for digital output before calling.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>There are no safety checks with this macro.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">_pin_</td><td>The <code>gpio_pin_t</code> pin to set. </td></tr>
@@ -761,7 +757,7 @@ There are no safety checks with this macro.</dd></dl>
 </div><div class="memdoc">
 
 <p>An identifier for MCU pins. </p>
-<dl class="section attention"><dt>Attention</dt><dd>The actual definition is in the device platform header file.</dd>
+<dl class="section note"><dt>Note</dt><dd>The actual definition is in the device platform header file.</dd>
 <dd>
 <code>0</code> is reserved for unassigned pins. </dd></dl>
 
@@ -781,9 +777,8 @@ There are no safety checks with this macro.</dd></dl>
 </div><div class="memdoc">
 
 <p>Define the operation mode of a GPIO pin. </p>
-<dl class="section attention"><dt>Attention</dt><dd>Some modes may be absent or aliased to other modes depending on the platform. Whether a mode exists can be determined by checking if it's name is defined.</dd>
-<dd>
-There may be additional modes on some platforms.</dd>
+<dl class="section attention"><dt>Attention</dt><dd>Some modes may be absent or aliased to other modes depending on the platform. Whether a mode exists can be determined by checking if it's name is defined.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>There may be additional modes on some platforms.</dd>
 <dd>
 The actual definition is in the device platform header file. </dd></dl>
 <table class="fieldtable">
@@ -820,7 +815,7 @@ The actual definition is in the device platform header file. </dd></dl>
 </div><div class="memdoc">
 
 <p>Define the state of a GPIO pin. </p>
-<dl class="section attention"><dt>Attention</dt><dd><code>GPIO_LOW</code> will always be '0U' and <code>GPIO_HIGH</code> will always be '1U'; any other values can't have assumptions made about them. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd><code>GPIO_LOW</code> will always be '0U' and <code>GPIO_HIGH</code> will always be '1U'; any other values can't have assumptions made about them. </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a2ff5468d5ab752db6fa1fb95363392a6ad41cdd897d9b8714ef45ed6e9eba0dfa" name="a2ff5468d5ab752db6fa1fb95363392a6ad41cdd897d9b8714ef45ed6e9eba0dfa"></a>GPIO_LOW&#160;</td><td class="fielddoc"><p>State HIGH. </p>
 </td></tr>
@@ -1030,7 +1025,7 @@ The desired state of digital outputs (so e.g. an open-drain pin thats pulled low
 <p>Prepare a pin for interrupt triggering. </p>
 <dl class="section attention"><dt>Attention</dt><dd>While this sets up the trigger, the actual IRQ will need to be handled by the calling code. How that's done will vary by platform but usually just means determining which interrupt handler is involved for a given pin and defining it. </dd>
 <dd>
-Multiple pins may share a handler or interfere with each other, that also varies by platform. Check the reference manual.</dd></dl>
+Multiple pins may share a handler or interfere with each other, this varies by platform. Check the reference manual.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handle</td><td>The handle used to manage the pin. Must not be NULL. </td></tr>
@@ -1434,7 +1429,7 @@ Multiple pins may share a handler or interfere with each other, that also varies
 <p>Inputs biased HIGH are set to trigger on a falling edge. Inputs biased LOW are set to trigger on a falling edge. Unbiased inputs are set to trigger on either edge.</p>
 <dl class="section attention"><dt>Attention</dt><dd>While this sets up the trigger, the actual IRQ will need to be handled by the calling code. How that's done will vary by platform but usually just means determining which interrupt handler is involved for a given pin and defining it. </dd>
 <dd>
-Multiple pins may share a handler or interfere with each other, that also varies by platform. Check the reference manual.</dd></dl>
+Multiple pins may share a handler or interfere with each other, this varies by platform. Check the reference manual.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handle</td><td>The handle used to manage the pin. Must not be NULL. </td></tr>
@@ -1718,7 +1713,7 @@ Multiple pins may share a handler or interfere with each other, that also varies
       </table>
 </div><div class="memdoc">
 
-<p>Initialize a <code>pinctrl_handle_t</code> based on a <code><a class="el" href="gpio_8h.html#structpinctrl__cfg__t" title="The structure used to configure a GPIO pin.">pinctrl_cfg_t</a></code> struct. </p>
+<p>Initialize a <code>pinctrl_handle_t</code> based on a <code><a class="el" href="gpio_8h.html#structpinctrl__cfg__t" title="A structure used to configure a GPIO pin.">pinctrl_cfg_t</a></code> struct. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handle</td><td>The handle to initialize. </td></tr>

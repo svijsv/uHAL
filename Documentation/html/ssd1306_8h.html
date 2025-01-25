@@ -245,7 +245,7 @@ Substitute this glyph for absent characters. </td></tr>
 <td class="fieldname">
 glyph_width</td>
 <td class="fielddoc">
-The width in pixels of glyphs in the font. <dl class="section attention"><dt>Attention</dt><dd>This member is only present when <code>SSD1306_FONT_WIDTH</code> is &lt;= 0. </dd></dl>
+The width in pixels of glyphs in the font. <dl class="section note"><dt>Note</dt><dd>This member is only present when <code>SSD1306_FONT_WIDTH</code> is &lt;= 0. </dd></dl>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="aba346fb9d5ef4e1f07712a0edae5d8b7" name="aba346fb9d5ef4e1f07712a0edae5d8b7"></a>const uint8_t *</td>
@@ -258,14 +258,14 @@ The array of glyphs. </td></tr>
 <td class="fieldname">
 scale_x</td>
 <td class="fielddoc">
-Scale font on the x axis. <dl class="section attention"><dt>Attention</dt><dd>This member is only present when <code>SSD1306_FONT_AUTOSCALE</code> is set. </dd></dl>
+Scale font on the x axis. <dl class="section note"><dt>Note</dt><dd>This member is only present when <code>SSD1306_FONT_AUTOSCALE</code> is set. </dd></dl>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="ad3d55d23959f258080d5d34e72afa57e" name="ad3d55d23959f258080d5d34e72afa57e"></a>uint8_t</td>
 <td class="fieldname">
 scale_y</td>
 <td class="fielddoc">
-Scale font on the y axis - must be 0, 1, 2, or 4. <dl class="section attention"><dt>Attention</dt><dd>This member is only present when <code>SSD1306_FONT_AUTOSCALE</code> is set. </dd></dl>
+Scale font on the y axis - must be 0, 1, 2, or 4. <dl class="section note"><dt>Note</dt><dd>This member is only present when <code>SSD1306_FONT_AUTOSCALE</code> is set. </dd></dl>
 </td></tr>
 </table>
 
@@ -309,7 +309,7 @@ Height of display in pixels. </td></tr>
 <td class="fieldname">
 init_cmds[SSD1306_INIT_COMMANDS_COUNT]</td>
 <td class="fielddoc">
-Additional initialization commands, see ssd1306.c for definitions. <dl class="section attention"><dt>Attention</dt><dd>This member is only present when <code>SSD1306_INIT_COMMANDS_COUNT</code> is &gt; 0. </dd></dl>
+Additional initialization commands, see ssd1306.c for definitions. <dl class="section note"><dt>Note</dt><dd>This member is only present when <code>SSD1306_INIT_COMMANDS_COUNT</code> is &gt; 0. </dd></dl>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="a09a2a45f731b02946ff6d3cd15c1a476" name="a09a2a45f731b02946ff6d3cd15c1a476"></a>uint8_t</td>
@@ -690,7 +690,7 @@ CS pin in SPI mode. </td></tr>
 </div><div class="memdoc">
 
 <p>Fill a section the screen with a bit pattern. </p>
-<dl class="section attention"><dt>Attention</dt><dd>The coordinates are in pixels, but the y coordinates are adjusted to use the native 8-bit-tall sections</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The coordinates are in pixels, but the y coordinates are adjusted to use the native 8-bit-tall sections</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handle</td><td>The handle used to manage the device </td></tr>

@@ -19,7 +19,7 @@
 ***********************************************************************/
 /// @file
 /// @brief Time Management Interface
-/// @attention
+/// @note
 ///    This file should only be included by interface.h.
 ///
 
@@ -112,7 +112,7 @@ err_t get_RTC_datetime(datetime_t *datetime);
 ///
 /// Set the system time enumerated in seconds.
 ///
-/// @attention
+/// @note
 /// This has the effect of setting both the date and the time.
 ///
 /// @param s The new system time.
@@ -131,7 +131,7 @@ utime_t get_RTC_seconds(void);
 ///
 /// Add milliseconds to the RTC.
 ///
-/// @attention
+/// @note
 /// This only impacts emulated RTCs.
 ///
 /// @param ms The number of milliseconds to add to the RTC.
@@ -140,7 +140,7 @@ void add_RTC_millis(uint_fast16_t ms);
 ///
 /// Subtract milliseconds from the RTC.
 ///
-/// @attention
+/// @note
 /// This only impacts emulated RTCs.
 ///
 /// @param ms The number of milliseconds to add to the RTC.
@@ -184,7 +184,7 @@ err_t adj_uptime(itime_t adjustment_seconds);
 ///
 /// Fix the uptime counter after an RTC update.
 ///
-/// @attention This is only used for emulated uptime counters.
+/// @note This is only used for emulated uptime counters.
 ///
 /// @param new_now The new value of the RTC in seconds.
 /// @param old_now The previous value of the RTC in seconds.
@@ -268,7 +268,7 @@ void delay_ms(utime_t ms);
 ///
 /// A 'dumb' delay that doesn't know about ticks.
 ///
-/// @attention
+/// @note
 /// Don't expect this to be very accurate.
 ///
 /// @param ms The number of milliseconds to pause.
@@ -277,7 +277,7 @@ void dumb_delay_ms(utime_t ms);
 ///
 /// A 'dumber' delay that doesn't even know about milliseconds.
 ///
-/// @attention
+/// @note
 /// Don't expect this to be very accurate.
 ///
 /// @param cycles The number of cycles to pause.

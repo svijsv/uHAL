@@ -20,7 +20,7 @@ var searchData=
   ['pre_5freset_5fhook_17',['pre_reset_hook',['../system_8h.html#a8e66724ac8b7e9912f10e6501751c9c1',1,'system.h']]],
   ['print_5fplatform_5finfo_18',['print_platform_info',['../serial_8h.html#ac4678cabca1c22b6100c5feb41694cca',1,'serial.h']]],
   ['print_5fsystem_5finfo_19',['print_system_info',['../serial_8h.html#a37f44bf45880153c07ddf47a4dcaf135',1,'serial.h']]],
-  ['print_5fuptime_20',['print_uptime',['../time_8h.html#a4c810018aaf9b60fb5b83158487ac794',1,'time.h']]],
+  ['print_5fuptime_20',['print_uptime',['../time_8h.html#a53010e90df55e81dbcc3e1a1aeefaa65',1,'time.h']]],
   ['printf_21',['PRINTF',['../serial_8h.html#a11c98794bcb78ef756dddb18233c6f96',1,'serial.h']]],
   ['printf_5fnof_22',['PRINTF_NOF',['../serial_8h.html#af6c985449b6b35d9040453fcab670eaa',1,'serial.h']]],
   ['puts_23',['PUTS',['../serial_8h.html#a5d8faf8c592923b15233daa1f8999f52',1,'serial.h']]],

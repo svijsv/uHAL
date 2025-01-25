@@ -19,7 +19,7 @@
 ***********************************************************************/
 /// @file
 /// @brief Interface between the frontend and backend code.
-/// @attention
+/// @note
 ///    This file should only be included by interface.h
 ///
 
@@ -36,21 +36,23 @@ typedef uint_fast8_t uHAL_flags_t;
 typedef enum {
 	///
 	/// Serial communication is ready.
-	/// @attention
+	/// @note
 	/// Set by the backend @c platform_init() if/when the serial communication
-	/// interface is available.
+	/// interface is available. Can be written by user code afterward to control
+	/// serial output without disabling the peripheral.
 	uHAL_FLAG_SERIAL_IS_UP = 0x01U,
 	///
 	/// A system interrupt is requested by the frontend.
-	/// @attention
+	/// @note
 	/// Set by user code when e.g. hibernation should be interrupted.
+	/// @attention
 	/// Must be cleared by user code before entering interruptable hibernation
 	/// to avoid immediately exiting.
 	uHAL_FLAG_IRQ = 0x02U,
 	///
 	/// Disallow sleep modes that may interfere with normal functionality by
 	/// (for example) disabling outputs or interrupts.
-	/// @attention
+	/// @note
 	/// Set and cleared by user code.
 	uHAL_FLAG_INHIBIT_HIBERNATION = 0x04U,
 } uHAL_status_flag_t;
@@ -103,7 +105,7 @@ void platform_reset(void);
 ///
 /// This hook is executed just prior to device reset.
 ///
-/// @attention
+/// @note
 /// This function is overrideable.
 void pre_reset_hook(void);
 /// @}
@@ -164,7 +166,7 @@ void hibernate(sleep_mode_t sleep_mode, uHAL_flags_t flags);
 ///
 /// Pre-hibernation hook.
 ///
-/// @attention
+/// @note
 /// This function is overrideable.
 ///
 /// @param s Duration of sleep (seconds).
@@ -176,7 +178,7 @@ void pre_hibernate_hook(utime_t *s, sleep_mode_t *sleep_mode, uHAL_flags_t flags
 ///
 /// Post-hibernation hook.
 ///
-/// @attention
+/// @note
 /// This function is overrideable.
 ///
 /// @param s Duration of sleep (seconds).
@@ -193,7 +195,7 @@ void post_hibernate_hook(utime_t s, sleep_mode_t sleep_mode, uHAL_flags_t flags)
 ///
 /// Go to an endless error loop. No information is printed.
 /// @c error_state_hook() is executed periodically.
-/// @attention
+/// @note
 /// This function is overrideable
 void error_state_crude(void);
 ///
@@ -202,7 +204,7 @@ void error_state_crude(void);
 /// periodically.
 /// @c error_state_hook() is executed periodically.
 ///
-/// @attention
+/// @note
 /// This function is overrideable.
 ///
 /// @param file_path The path of the file where the error originated.
@@ -215,7 +217,7 @@ void error_state(const char *file_path, uint32_t lineno, const char *func_name, 
 /// @c error_state().
 /// By default this does nothing.
 ///
-/// @attention
+/// @note
 /// This function is overrideable.
 void error_state_hook(void);
 
@@ -224,7 +226,7 @@ void error_state_hook(void);
 ///
 /// Convenience macro for @c error_state().
 ///
-/// @attention
+/// @note
 /// This macro uses the @c F() and @c F1() macros on systems with separate namespaces.
 ///
 /// @param msg A message elaborating on the state of the error.
