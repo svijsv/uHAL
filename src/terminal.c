@@ -85,7 +85,7 @@ static FMEM_STORAGE const char default_help[] =
 "Accepted commands:\r\n"
 "   set_time YY.MM.DD hh:mm:ss - Set system time, clock is 24-hour\r\n"
 "   info                       - Print system information\r\n"
-"   delay <seconds>\r\n"
+"   delay <seconds>            - Pause the system\r\n"
 # if uHAL_USE_FDISK
 "   fdisk                      - Format the SD card\r\n"
 # endif
