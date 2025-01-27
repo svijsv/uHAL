@@ -51,7 +51,7 @@
 #  if uHAL_USE_RTC
 #   define NOW() (get_RTC_seconds())
 #  elif uHAL_USE_UPTIME
-#   define NOW() (get_RTC_seconds())
+#   define NOW() (get_uptime())
 #  endif
 # endif
 ///
