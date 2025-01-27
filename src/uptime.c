@@ -119,7 +119,7 @@ err_t fix_uptime(utime_t new_now, utime_t old_now) {
 }
 
 utime_t get_uptime(void) {
-	itime_t now = NOW();
+	itime_t now = get_RTC_seconds();
 
 	assert(now >= uptime_origin);
 
