@@ -27,9 +27,11 @@
 
 #if uHAL_USE_UPTIME
 
+#define PRINT_ALL_FIELDS 0
+
 const char* print_uptime(utime_t seconds, char *buf, uint_fast8_t buf_size) {
 	uint_fast8_t i = buf_size;
-	uint32_t tmp;
+	uint_fast32_t tmp;
 
 	assert(buf != NULL);
 	// Make sure string is large enough to hold 'DdHHhMMmSSs' + NUL byte.
@@ -42,7 +44,7 @@ const char* print_uptime(utime_t seconds, char *buf, uint_fast8_t buf_size) {
 		}
 	}
 
-	// Prefix the decrement because we start i just past the end of the array.
+	// Prefix the decrement because we start 'i' just past the end of the array.
 	// This also means buf[i] is always our string start.
 	buf[--i] = 0;
 
@@ -51,24 +53,26 @@ const char* print_uptime(utime_t seconds, char *buf, uint_fast8_t buf_size) {
 	buf[--i] = (tmp % 10) + '0';
 	buf[--i] = (tmp / 10) + '0';
 
-	tmp = (seconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE;
-	if (tmp == 0) {
+	tmp = seconds / SECONDS_PER_MINUTE;
+	if (!PRINT_ALL_FIELDS && tmp == 0) {
 		goto END;
 	}
+	tmp %= SECONDS_PER_HOUR;
 	buf[--i] = 'm';
 	buf[--i] = (tmp % 10) + '0';
 	buf[--i] = (tmp / 10) + '0';
 
-	tmp = (seconds % SECONDS_PER_DAY) / SECONDS_PER_HOUR;
-	if (tmp == 0) {
+	tmp = seconds / SECONDS_PER_HOUR;
+	if (!PRINT_ALL_FIELDS && tmp == 0) {
 		goto END;
 	}
+	tmp %= SECONDS_PER_DAY;
 	buf[--i] = 'h';
 	buf[--i] = (tmp % 10) + '0';
 	buf[--i] = (tmp / 10) + '0';
 
 	tmp = seconds / SECONDS_PER_DAY;
-	if (tmp == 0) {
+	if (!PRINT_ALL_FIELDS && tmp == 0) {
 		goto END;
 	}
 	buf[--i] = 'd';
