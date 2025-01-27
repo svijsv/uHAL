@@ -35,18 +35,18 @@
 //
 // Basic system configuration
 //
-#define uHAL_USE_SUBSYSTEM_DEFAULT 0
-#define uHAL_USE_DRIVER_DEFAULT    0
+#define uHAL_USE_SUBSYSTEM_DEFAULT 1
+#define uHAL_USE_DRIVER_DEFAULT    1
 
 #define PRINT_PLATFORM_INFO 0
 #define PAUSE_MS 5000U
 
 #define uHAL_USE_RTC 1
+#define uHAL_USE_UPTIME 1
 
 // Useful for AVR, size with these set is closer to release build but with
 // compile info and debugging symbols
 // LOGGER() and ERROR_STATE() are responsible for the remaining difference i think
-#undef uHAL_USE_SMALL_CODE
 #if defined(HAVE_AVR_XMEGA3) && HAVE_AVR_XMEGA3 > 0
 # define uHAL_USE_SMALL_CODE 2
 # define ERROR_STATE(msg)     error_state_crude()
@@ -73,7 +73,6 @@
 #define uHAL_SKIP_INVALID_ARG_CHECKS uHAL_USE_SMALL_CODE
 #define uHAL_SKIP_INIT_CHECKS uHAL_USE_SMALL_CODE
 #define uHAL_SKIP_OTHER_CHECKS uHAL_USE_SMALL_CODE
-
 
 //
 // Test configuration
@@ -118,7 +117,7 @@
 #define UART_INPUT_BUFFER_BYTES 8U
 //#define UART_INPUT_BUFFER_BYTES 0U
 
-#define TEST_TERMINAL 0
+#define TEST_TERMINAL 1
 #define TERMINAL_HAVE_EXTRA_CMDS TEST_TERMINAL
 #define TEST_TERMINAL_LED_PIN LED_PIN
 
@@ -130,7 +129,7 @@
 
 #define uHAL_ANNOUNCE_HIBERNATE 0
 
-#define TEST_HIBERNATE 0
+#define TEST_HIBERNATE 1
 //#undef uHAL_HIBERNATE_LIMIT
 //#define uHAL_HIBERNATE_LIMIT HIBERNATE_DEEP
 // Deep sleep interferes with PWM (at least on STM32s)

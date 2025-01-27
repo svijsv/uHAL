@@ -6,6 +6,8 @@
 // file.
 //
 
+#define DEBUG_CPP_MESSAGES 0
+
 #define ULIB_ENABLE_DEFAULT 0
 #define ULIB_USE_STRUCT_ID  0
 #define ULIB_USE_MALLOC     0
