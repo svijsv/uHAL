@@ -69,8 +69,12 @@ static int terminalcmd_fdisk(const char *line_in);
 #endif // uHAL_USE_FDISK
 
 static FMEM_STORAGE const terminal_cmd_t default_cmds[] = {
+#if uHAL_USE_RTC
 	{ terminalcmd_set_time,    "set_time",    8 },
+#endif
+#if uHAL_USE_RTC || uHAL_USE_UPTIME
 	{ terminalcmd_delay_S,     "delay",       5 },
+#endif
 	{ terminalcmd_show_info,   "info",        4 },
 	{ terminalcmd_show_help,   "help",        4 },
 	{ terminalcmd_exit,        "exit",        4 },
@@ -83,9 +87,13 @@ static FMEM_STORAGE const terminal_cmd_t default_cmds[] = {
 static FMEM_STORAGE const char default_help[] =
 #if ! uHAL_USE_SMALL_MESSAGES
 "Accepted commands:\r\n"
+#if uHAL_USE_RTC
 "   set_time YY.MM.DD hh:mm:ss - Set system time, clock is 24-hour\r\n"
+#endif
 "   info                       - Print system information\r\n"
+#if uHAL_USE_RTC || uHAL_USE_UPTIME
 "   delay <seconds>            - Pause the system\r\n"
+#endif
 # if uHAL_USE_FDISK
 "   fdisk                      - Format the SD card\r\n"
 # endif
@@ -263,6 +271,7 @@ static int terminalcmd_show_help(const char *line_in) {
 	return 0;
 }
 
+#if uHAL_USE_RTC
 // Format: 'set_time [[20]YY.MM.DD] [hh:mm[:ss]]'
 static int terminalcmd_set_time(const char *line_in) {
 	err_t err = ERR_OK;
@@ -379,7 +388,9 @@ END:
 	}
 	return 0;
 }
+#endif
 
+#if uHAL_USE_RTC || uHAL_USE_UPTIME
 // Format: 'delay <N>'
 static int terminalcmd_delay_S(const char *line_in) {
 	utime_t n;
@@ -400,6 +411,8 @@ static int terminalcmd_delay_S(const char *line_in) {
 
 	return 0;
 }
+#endif
+
 #if uHAL_USE_FDISK
 static int terminalcmd_fdisk(const char *line_in, txsize_t size) {
 	static FMEM_STORAGE const char confirm_string[] = "ERASE MY CARD!";

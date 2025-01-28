@@ -275,11 +275,12 @@ void print_system_info(void) {
 #endif
 
 #if ! uHAL_USE_SMALL_MESSAGES
-	datetime_t dt;
+	PRINTF("Build Date: %s\r\nPlatformIO: %u\r\n", BUILD_DATE, (uint )PLATFORMIO);
 
+# if uHAL_USE_RTC
+	datetime_t dt;
 	get_RTC_datetime(&dt);
 
-	PRINTF("Build Date: %s PlatformIO: %u\r\n", BUILD_DATE, (uint )PLATFORMIO);
 	PRINTF("Current system time is %04u.%02u.%02u %02u:%02u:%02u\r\n",
 		(uint )dt.year,
 		(uint )dt.month,
@@ -288,10 +289,13 @@ void print_system_info(void) {
 		(uint )dt.minute,
 		(uint )dt.second
 	);
+# endif
+
 #if uHAL_USE_UPTIME
 	char buf[16];
 	PRINTF("Current system uptime is %s\r\n", print_uptime(get_uptime(), buf, SIZEOF_ARRAY(buf)));
 #endif
+
 # if uHAL_USE_FATFS
 	PRINTF("Using FatFS revision %u\r\n", (uint )FFCONF_DEF);
 # endif
