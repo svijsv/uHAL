@@ -71,7 +71,7 @@ err_t set_RTC_datetime(const datetime_t *datetime) {
 	return _set_RTC_seconds(RTC_datetime_to_second_counter(datetime, get_RTC_seconds()));
 }
 err_t get_RTC_datetime(datetime_t *datetime) {
-	assert(datetime != NULL);
+	uHAL_assert(datetime != NULL);
 	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
 		return ERR_BADARG;
 	}
@@ -184,7 +184,7 @@ void RTC_adj_clock(int32_t ppm) {
 void set_RTC_prediv(uint32_t psc) {
 	uint32_t cal_per_psc, adj_psc, adj_cal;
 
-	assert(psc <= RTC_PSC_MAX);
+	uHAL_assert(psc <= RTC_PSC_MAX);
 	if (psc > RTC_PSC_MAX) {
 		return;
 	}
@@ -210,7 +210,7 @@ void set_RTC_prediv(uint32_t psc) {
 }
 */
 void set_RTC_prediv(uint32_t psc) {
-	assert(psc <= RTC_PSC_MAX);
+	uHAL_assert(psc <= RTC_PSC_MAX);
 	if (psc > RTC_PSC_MAX) {
 		return;
 	}

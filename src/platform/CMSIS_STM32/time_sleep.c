@@ -101,7 +101,7 @@ void sleep_alarm_timer_init(void) {
 }
 
 uint32_t set_sleep_alarm(uint32_t ms) {
-	assert(ms != 0);
+	uHAL_assert(ms != 0);
 	if (ms > SLEEP_TIM_MAX_MS) {
 		ms = SLEEP_TIM_MAX_MS;
 	}

@@ -111,7 +111,7 @@ static void flush_printf_buffer(void) {
 }
 #if UART_COMM_BUFFER_BYTES > 0
 static void serial_putc(uint_fast8_t c) {
-	assert(printf_buffer_size < UART_COMM_BUFFER_BYTES);
+	uHAL_assert(printf_buffer_size < UART_COMM_BUFFER_BYTES);
 
 	printf_buffer[printf_buffer_size] = c;
 	++printf_buffer_size;
@@ -130,7 +130,7 @@ static void serial_putc(uint_fast8_t c) {
 }
 #endif // UART_COMM_BUFFER_BYTES > 0
 void serial_print(const char *msg, txsize_t len) {
-	assert(msg != NULL);
+	uHAL_assert(msg != NULL);
 
 #if ! uHAL_SKIP_INIT_CHECKS
 #endif
@@ -159,7 +159,7 @@ void serial_print(const char *msg, txsize_t len) {
 void serial_printf(const char *fmt, ...) {
 	va_list arp;
 
-	assert(fmt != NULL);
+	uHAL_assert(fmt != NULL);
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 	if (fmt == NULL) {
 		return;
@@ -180,7 +180,7 @@ void serial_printf(const char *fmt, ...) {
 
 #if LOGGER_HISTORY_BUFFER_BYTES > 0
 static void logger_putc(uint_fast8_t c) {
-	assert(logger_replay_buffer.size <= LOGGER_HISTORY_BUFFER_BYTES);
+	uHAL_assert(logger_replay_buffer.size <= LOGGER_HISTORY_BUFFER_BYTES);
 
 	serial_putc(c);
 
@@ -234,7 +234,7 @@ void logger_replay(void) {
 void logger(const char *fmt, ...) {
 	va_list arp;
 
-	assert(fmt != NULL);
+	uHAL_assert(fmt != NULL);
 #if ! uHAL_SKIP_INIT_CHECKS
 #endif
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS

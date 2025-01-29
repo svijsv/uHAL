@@ -34,14 +34,14 @@
 utime_t RTC_datetime_to_second_counter(const datetime_t *datetime, utime_t now) {
 	utime_t new_now = 0;
 
-	assert(datetime != NULL);
+	uHAL_assert(datetime != NULL);
 	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
 		return 0;
 	}
 
 	// Only change the date if it's set in the new structure
 	if ((datetime->year | datetime->month | datetime->day) != 0) {
-		assert((IS_IN_RANGE(datetime->month, 1, 12)) && (IS_IN_RANGE(datetime->day, 1, 31)));
+		uHAL_assert((IS_IN_RANGE(datetime->month, 1, 12)) && (IS_IN_RANGE(datetime->day, 1, 31)));
 		if (!uHAL_SKIP_INVALID_ARG_CHECKS && ((!IS_IN_RANGE(datetime->month, 1, 12)) || (!IS_IN_RANGE(datetime->day, 1, 31)))) {
 			return ERR_BADARG;
 		}
@@ -52,7 +52,7 @@ utime_t RTC_datetime_to_second_counter(const datetime_t *datetime, utime_t now) 
 
 	// Only change the time if it's set in the new structure
 	if ((datetime->hour | datetime->minute | datetime->second) != 0) {
-		assert((datetime->hour <= 23) || (datetime->minute <= 59) || (datetime->second <= 59));
+		uHAL_assert((datetime->hour <= 23) || (datetime->minute <= 59) || (datetime->second <= 59));
 		if (!uHAL_SKIP_INVALID_ARG_CHECKS && ((datetime->hour > 23) || (datetime->minute > 59) || (datetime->second > 59))) {
 			return ERR_BADARG;
 		}
@@ -131,7 +131,7 @@ err_t set_RTC_datetime(const datetime_t *datetime) {
 	return set_RTC_seconds(RTC_datetime_to_second_counter(datetime, get_RTC_seconds()));
 }
 err_t get_RTC_datetime(datetime_t *datetime) {
-	assert(datetime != NULL);
+	uHAL_assert(datetime != NULL);
 	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
 		return ERR_BADARG;
 	}

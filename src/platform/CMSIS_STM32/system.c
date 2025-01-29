@@ -249,9 +249,9 @@ void platform_init(void) {
 static void set_sysclock_src(uint32_t rcc_cfgr_sw, uint32_t rcc_cr_on, uint32_t rcc_cr_rdy) {
 	uint32_t sws;
 
-	assert((rcc_cfgr_sw == RCC_CFGR_SW_HSI) || (rcc_cfgr_sw == RCC_CFGR_SW_HSE) || (rcc_cfgr_sw == RCC_CFGR_SW_PLL));
-	assert((rcc_cr_on == RCC_CR_HSION) || (rcc_cr_on == RCC_CR_HSEON) || (rcc_cr_on == RCC_CR_PLLON));
-	assert((rcc_cr_rdy == RCC_CR_HSIRDY) || (rcc_cr_rdy == RCC_CR_HSERDY) || (rcc_cr_rdy == RCC_CR_PLLRDY));
+	uHAL_assert((rcc_cfgr_sw == RCC_CFGR_SW_HSI) || (rcc_cfgr_sw == RCC_CFGR_SW_HSE) || (rcc_cfgr_sw == RCC_CFGR_SW_PLL));
+	uHAL_assert((rcc_cr_on == RCC_CR_HSION) || (rcc_cr_on == RCC_CR_HSEON) || (rcc_cr_on == RCC_CR_PLLON));
+	uHAL_assert((rcc_cr_rdy == RCC_CR_HSIRDY) || (rcc_cr_rdy == RCC_CR_HSERDY) || (rcc_cr_rdy == RCC_CR_PLLRDY));
 
 	// Turn the new clock on
 	SET_BIT(RCC->CR, rcc_cr_on);

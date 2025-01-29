@@ -175,9 +175,9 @@ err_t i2c_receive_block(uint8_t addr, uint8_t *rx_buffer, txsize_t rx_size, utim
 	err_t res = ERR_OK;
 	txsize_t i;
 
-	assert(ADDRESS_OK(addr));
-	assert(BUFFER_OK(rx));
-	assert(TWIx_INIT_OK(TWIx));
+	uHAL_assert(ADDRESS_OK(addr));
+	uHAL_assert(BUFFER_OK(rx));
+	uHAL_assert(TWIx_INIT_OK(TWIx));
 
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!TWIx_INIT_OK(TWIx)) {
@@ -296,8 +296,8 @@ END:
 	return res;
 }
 err_t i2c_transmit_block_begin(uint8_t addr, utime_t timeout) {
-	assert(ADDRESS_OK(addr));
-	assert(TWIx_INIT_OK(TWIx));
+	uHAL_assert(ADDRESS_OK(addr));
+	uHAL_assert(TWIx_INIT_OK(TWIx));
 
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!TWIx_INIT_OK(TWIx)) {
@@ -346,8 +346,8 @@ END:
 	return res;
 }
 err_t i2c_transmit_block_continue(const uint8_t *tx_buffer, txsize_t tx_size, utime_t timeout) {
-	assert(BUFFER_OK(tx));
-	assert(TWIx_INIT_OK(TWIx));
+	uHAL_assert(BUFFER_OK(tx));
+	uHAL_assert(TWIx_INIT_OK(TWIx));
 
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!TWIx_INIT_OK(TWIx)) {
@@ -403,9 +403,9 @@ END:
 err_t i2c_transmit_block(uint8_t addr, const uint8_t *tx_buffer, txsize_t tx_size, utime_t timeout) {
 	err_t res = ERR_OK;
 
-	assert(ADDRESS_OK(addr));
-	assert(BUFFER_OK(tx));
-	assert(TWIx_INIT_OK(TWIx));
+	uHAL_assert(ADDRESS_OK(addr));
+	uHAL_assert(BUFFER_OK(tx));
+	uHAL_assert(TWIx_INIT_OK(TWIx));
 
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!TWIx_INIT_OK(TWIx)) {

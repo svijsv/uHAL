@@ -30,6 +30,13 @@
 //#define PROGVERS
 
 //
+// The function called for assertions, can be set to '(void )0' to disable
+// without disabling assert() elsewhere.
+#ifndef uHAL_assert
+# define uHAL_assert(_x_) assert(_x_)
+#endif
+
+//
 // If non-zero, subsystems are enabled by default
 #ifndef uHAL_USE_SUBSYSTEM_DEFAULT
 # define uHAL_USE_SUBSYSTEM_DEFAULT 0

@@ -183,7 +183,7 @@ static void wait_for_sync(void) {
 void set_RTC_prediv(uint32_t psc) {
 	uint32_t prediv_a, prediv_s;
 
-	assert(psc > 0 && psc <= RTC_PSC_MAX);
+	uHAL_assert(psc > 0 && psc <= RTC_PSC_MAX);
 	if (psc <= 0 || psc > RTC_PSC_MAX) {
 		return;
 	}
@@ -310,7 +310,7 @@ static void calendarcfg_enable(void) {
 static err_t _get_RTC_datetime(datetime_t *datetime) {
 	uint32_t tr, dr;
 
-	assert(datetime != NULL);
+	uHAL_assert(datetime != NULL);
 	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
 		return ERR_BADARG;
 	}
@@ -356,7 +356,7 @@ static utime_t _get_RTC_seconds(void) {
 static err_t _set_RTC_datetime(const datetime_t *datetime, utime_t new_s) {
 	uint32_t tr = 0, dr = 0;
 
-	assert(datetime != NULL);
+	uHAL_assert(datetime != NULL);
 	if (!uHAL_SKIP_INVALID_ARG_CHECKS && datetime == NULL) {
 		return ERR_BADARG;
 	}
@@ -371,7 +371,7 @@ static err_t _set_RTC_datetime(const datetime_t *datetime, utime_t new_s) {
 
 	// Only change the date if it's set in the new structure
 	if ((datetime->year | datetime->month | datetime->day) != 0) {
-		assert((IS_IN_RANGE(datetime->month, 1, 12)) && (IS_IN_RANGE(datetime->day, 1, 31)));
+		uHAL_assert((IS_IN_RANGE(datetime->month, 1, 12)) && (IS_IN_RANGE(datetime->day, 1, 31)));
 		if (!uHAL_SKIP_INVALID_ARG_CHECKS && ((!IS_IN_RANGE(datetime->month, 1, 12)) || (!IS_IN_RANGE(datetime->day, 1, 31)))) {
 			return ERR_BADARG;
 		}
@@ -389,7 +389,7 @@ static err_t _set_RTC_datetime(const datetime_t *datetime, utime_t new_s) {
 
 	// Only change the time if it's set in the new structure
 	if ((datetime->hour | datetime->minute | datetime->second) != 0) {
-		assert((datetime->hour <= 23) || (datetime->minute <= 59) || (datetime->second <= 59));
+		uHAL_assert((datetime->hour <= 23) || (datetime->minute <= 59) || (datetime->second <= 59));
 		if (!uHAL_SKIP_INVALID_ARG_CHECKS && ((datetime->hour > 23) || (datetime->minute > 59) || (datetime->second > 59))) {
 			return ERR_BADARG;
 		}
@@ -424,10 +424,10 @@ static err_t _set_RTC_seconds(utime_t s) {
 void set_RTC_alarm(utime_t time) {
 	uint32_t tr, tmp;
 
-	assert(time <= HIBERNATE_MAX_S);
+	uHAL_assert(time <= HIBERNATE_MAX_S);
 	// We only look at the time part of the clock when setting the alarm to
 	// simplify things which works fine as long as we don't exceed one day
-	assert(time < SECONDS_PER_DAY);
+	uHAL_assert(time < SECONDS_PER_DAY);
 
 	if (time == 0) {
 		return;

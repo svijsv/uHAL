@@ -212,7 +212,7 @@ static uint8_t adc_find_pin_ain(gpio_pin_t pin) {
 adc_t adc_read_pin(gpio_pin_t pin) {
 	uint8_t channel = 0;
 
-	assert(GPIO_PIN_IS_VALID(pin));
+	uHAL_assert(GPIO_PIN_IS_VALID(pin));
 #if ! uHAL_SKIP_INIT_CHECKS
 #endif
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
@@ -294,7 +294,7 @@ adc_t adc_read_ac_amplitude(gpio_pin_t pin, uint32_t period_ms, adc_t *min, adc_
 	adc_t adc, adc_min, adc_max;
 	utime_t timeout;
 
-	assert(GPIO_PIN_IS_VALID(pin));
+	uHAL_assert(GPIO_PIN_IS_VALID(pin));
 #if ! uHAL_SKIP_INIT_CHECKS
 #endif
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS

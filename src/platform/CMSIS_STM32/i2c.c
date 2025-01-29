@@ -229,10 +229,10 @@ err_t i2c_receive_block(uint8_t addr, uint8_t *rx_buffer, txsize_t rx_size, utim
 	txsize_t i;
 	volatile uint32_t tmp;
 
-	assert(PERIPH_IS_INITIALIZED(I2Cx));
-	assert(addr <= 0x7FU);
-	assert(rx_buffer != NULL);
-	assert(rx_size > 0);
+	uHAL_assert(PERIPH_IS_INITIALIZED(I2Cx));
+	uHAL_assert(addr <= 0x7FU);
+	uHAL_assert(rx_buffer != NULL);
+	uHAL_assert(rx_size > 0);
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!PERIPH_IS_INITIALIZED(I2Cx)) {
 		return ERR_INIT;
@@ -490,8 +490,8 @@ END:
 	return res;
 }
 err_t i2c_transmit_block_begin(uint8_t addr, utime_t timeout) {
-	assert(PERIPH_IS_INITIALIZED(I2Cx));
-	assert(addr <= 0x7FU);
+	uHAL_assert(PERIPH_IS_INITIALIZED(I2Cx));
+	uHAL_assert(addr <= 0x7FU);
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!PERIPH_IS_INITIALIZED(I2Cx)) {
 		return ERR_INIT;
@@ -533,9 +533,9 @@ END:
 	return res;
 }
 err_t i2c_transmit_block_continue(const uint8_t *tx_buffer, txsize_t tx_size, utime_t timeout) {
-	assert(PERIPH_IS_INITIALIZED(I2Cx));
-	assert(tx_buffer != NULL);
-	assert(tx_size > 0);
+	uHAL_assert(PERIPH_IS_INITIALIZED(I2Cx));
+	uHAL_assert(tx_buffer != NULL);
+	uHAL_assert(tx_size > 0);
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!PERIPH_IS_INITIALIZED(I2Cx) || !BUS_IS_OWNED(I2Cx)) {
 		return ERR_INIT;
@@ -555,7 +555,7 @@ err_t i2c_transmit_block_continue(const uint8_t *tx_buffer, txsize_t tx_size, ut
 err_t i2c_transmit_block_end(void) {
 	utime_t timeout = SET_TIMEOUT_MS(100);
 
-	assert(PERIPH_IS_INITIALIZED(I2Cx));
+	uHAL_assert(PERIPH_IS_INITIALIZED(I2Cx));
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!PERIPH_IS_INITIALIZED(I2Cx)) {
 		return ERR_INIT;
@@ -591,10 +591,10 @@ err_t i2c_transmit_block_end(void) {
 err_t i2c_transmit_block(uint8_t addr, const uint8_t *tx_buffer, txsize_t tx_size, utime_t timeout) {
 	err_t res = ERR_OK;
 
-	assert(PERIPH_IS_INITIALIZED(I2Cx));
-	assert(addr <= 0x7FU);
-	assert(tx_buffer != NULL);
-	assert(tx_size > 0);
+	uHAL_assert(PERIPH_IS_INITIALIZED(I2Cx));
+	uHAL_assert(addr <= 0x7FU);
+	uHAL_assert(tx_buffer != NULL);
+	uHAL_assert(tx_size > 0);
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!PERIPH_IS_INITIALIZED(I2Cx)) {
 		return ERR_INIT;
@@ -627,8 +627,8 @@ err_t i2c_transmit_block(uint8_t addr, const uint8_t *tx_buffer, txsize_t tx_siz
 	txsize_t i;
 	volatile uint32_t tmp;
 
-	assert(tx_buffer != NULL);
-	assert(tx_size > 0);
+	uHAL_assert(tx_buffer != NULL);
+	uHAL_assert(tx_size > 0);
 
 	res = ERR_OK;
 	timeout = SET_TIMEOUT_MS(timeout);

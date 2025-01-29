@@ -33,9 +33,9 @@ const char* print_uptime(utime_t seconds, char *buf, uint_fast8_t buf_size) {
 	uint_fast8_t i = buf_size;
 	uint_fast32_t tmp;
 
-	assert(buf != NULL);
+	uHAL_assert(buf != NULL);
 	// Make sure string is large enough to hold 'DdHHhMMmSSs' + NUL byte.
-	assert(buf_size >= 12);
+	uHAL_assert(buf_size >= 12);
 	//assert(buf_size > 0);
 
 	if (!uHAL_SKIP_INVALID_ARG_CHECKS) {
@@ -121,7 +121,7 @@ err_t fix_uptime(utime_t new_now, utime_t old_now) {
 utime_t get_uptime(void) {
 	itime_t now = get_RTC_seconds();
 
-	assert(now >= uptime_origin);
+	uHAL_assert(now >= uptime_origin);
 
 	return (now > uptime_origin) ? now - uptime_origin : 0;
 }

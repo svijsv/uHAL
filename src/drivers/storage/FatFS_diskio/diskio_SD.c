@@ -102,8 +102,8 @@ static BYTE xchg_spi (BYTE tx) {
 * btr: Number of bytes to receive
 */
 static void rx_spi_multi (BYTE *buf, UINT btr) {
-	assert(buf != NULL);
-	assert(btr > 0);
+	uHAL_assert(buf != NULL);
+	uHAL_assert(btr > 0);
 
 	/*
 	// Detect and handle blocks that aren't a multiple of 2 bytes
@@ -128,8 +128,8 @@ static void rx_spi_multi (BYTE *buf, UINT btr) {
 * btx: Number of bytes to send
 */
 static void tx_spi_multi (const BYTE *buf, UINT btx) {
-	assert(buf != NULL);
-	assert(btx > 0);
+	uHAL_assert(buf != NULL);
+	uHAL_assert(btx > 0);
 
 	/*
 	// Detect and handle blocks that aren't a multiple of 2 bytes
@@ -215,8 +215,8 @@ static int rx_datablock (BYTE *buf, UINT btr) {
 	BYTE token;
 	utime_t timeout;
 
-	assert(buf != NULL);
-	assert(btr > 0);
+	uHAL_assert(buf != NULL);
+	uHAL_assert(btr > 0);
 
 	timeout = SET_TIMEOUT_MS(200);
 	do { /* Wait for DataStart token in timeout of 200ms */
@@ -245,7 +245,7 @@ static int rx_datablock (BYTE *buf, UINT btr) {
 static int tx_datablock (const BYTE *buf, BYTE token) {
 	BYTE resp;
 
-	assert(buf != NULL);
+	uHAL_assert(buf != NULL);
 
 	/* Wait for card ready */
 	if (!wait_ready(500)) {
@@ -348,7 +348,7 @@ DSTATUS disk_initialize (BYTE lun) {
 
 	UNUSED(lun);
 
-	assert(lun == 0);
+	uHAL_assert(lun == 0);
 
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 	if (lun != 0) {
@@ -417,7 +417,7 @@ DSTATUS disk_initialize (BYTE lun) {
 DSTATUS disk_status (BYTE lun) {
 	UNUSED(lun);
 
-	assert(lun == 0);
+	uHAL_assert(lun == 0);
 
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 	if (lun != 0) {
@@ -442,9 +442,9 @@ DRESULT disk_read (BYTE lun, BYTE *buf, LBA_t sector, UINT count) {
 
 	UNUSED(lun);
 
-	assert(buf != NULL);
-	assert(lun == 0);
-	assert(count >= 1 && count <= 128);
+	uHAL_assert(buf != NULL);
+	uHAL_assert(lun == 0);
+	uHAL_assert(count >= 1 && count <= 128);
 
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 	if (buf == NULL) {
@@ -502,9 +502,9 @@ DRESULT disk_write (BYTE lun, const BYTE *buf, LBA_t sector, UINT count) {
 
 	UNUSED(lun);
 
-	assert(buf != NULL);
-	assert(lun == 0);
-	assert(count >= 1 && count <= 128);
+	uHAL_assert(buf != NULL);
+	uHAL_assert(lun == 0);
+	uHAL_assert(count >= 1 && count <= 128);
 
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 	if (buf == NULL) {
@@ -570,7 +570,7 @@ DRESULT disk_ioctl (BYTE lun, BYTE cmd, void *buf) {
 	DWORD st, ed, csize;
 	LBA_t *dp;
 
-	assert(lun == 0);
+	uHAL_assert(lun == 0);
 
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 	if (lun != 0) {
@@ -589,7 +589,7 @@ DRESULT disk_ioctl (BYTE lun, BYTE cmd, void *buf) {
 	case CTRL_TRIM:
 		break;
 	default:
-		assert(buf != NULL);
+		uHAL_assert(buf != NULL);
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 		if (buf == NULL) {
 			return RES_PARERR;

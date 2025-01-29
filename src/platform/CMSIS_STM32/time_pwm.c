@@ -115,7 +115,7 @@ static void configure_pwm_timer(uint_fast8_t tim_id, uint16_t psc) {
 		(0b1   << TIM_CCMR1_OC2PE_Pos) | // Channel 2/4, preload register enabled
 		0;
 
-	assert(TIMx != NULL);
+	uHAL_assert(TIMx != NULL);
 	if (TIMx == NULL) {
 		return;
 	}
@@ -251,8 +251,8 @@ void pwm_init(void) {
 }
 
 static err_t _pwm_set(TIM_TypeDef *TIMx, uint_fast8_t channel, uint_fast16_t duty_cycle) {
-	assert(TIMx != NULL);
-	assert(duty_cycle <= PWM_DUTY_CYCLE_SCALE);
+	uHAL_assert(TIMx != NULL);
+	uHAL_assert(duty_cycle <= PWM_DUTY_CYCLE_SCALE);
 
 	if (duty_cycle > PWM_DUTY_CYCLE_SCALE) {
 		duty_cycle = PWM_DUTY_CYCLE_SCALE;
@@ -281,8 +281,8 @@ static err_t _pwm_set(TIM_TypeDef *TIMx, uint_fast8_t channel, uint_fast16_t dut
 	return ERR_OK;
 }
 err_t pwm_set(pwm_output_t *output, uint_fast16_t duty_cycle) {
-	assert(duty_cycle <= PWM_DUTY_CYCLE_SCALE);
-	assert(PWM_OUTPUT_IS_VALID(output));
+	uHAL_assert(duty_cycle <= PWM_DUTY_CYCLE_SCALE);
+	uHAL_assert(PWM_OUTPUT_IS_VALID(output));
 
 #if ! uHAL_SKIP_INIT_CHECKS
 	if (!PWM_OUTPUT_IS_VALID(output)) {
@@ -313,9 +313,9 @@ err_t pwm_on(pwm_output_t *output, gpio_pin_t pin, uint_fast16_t duty_cycle) {
 		pin = output->pin;
 	}
 
-	assert(duty_cycle <= PWM_DUTY_CYCLE_SCALE);
-	assert(GPIO_PIN_IS_VALID(pin));
-	assert(output != NULL);
+	uHAL_assert(duty_cycle <= PWM_DUTY_CYCLE_SCALE);
+	uHAL_assert(GPIO_PIN_IS_VALID(pin));
+	uHAL_assert(output != NULL);
 
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 	if (output == NULL || !GPIO_PIN_IS_VALID(pin)) {
@@ -368,7 +368,7 @@ err_t pwm_on(pwm_output_t *output, gpio_pin_t pin, uint_fast16_t duty_cycle) {
 err_t pwm_off(pwm_output_t *output) {
 	uint32_t enr_bit = 0;
 
-	assert(PWM_OUTPUT_IS_VALID(output));
+	uHAL_assert(PWM_OUTPUT_IS_VALID(output));
 
 #if ! uHAL_SKIP_INVALID_ARG_CHECKS
 	if (!PWM_OUTPUT_IS_VALID(output)) {

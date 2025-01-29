@@ -54,8 +54,8 @@ void systick_init(void) {
 	psc = ((G_freq_HCLK / 8U) / 1000U);
 	div = 0b0U;
 #endif
-	assert(psc > 0);
-	assert(SysTick_LOAD_RELOAD_Msk >= (psc - 1U));
+	uHAL_assert(psc > 0);
+	uHAL_assert(SysTick_LOAD_RELOAD_Msk >= (psc - 1U));
 
 	SysTick->LOAD = (psc - 1U);
 	NVIC_SetPriority(SysTick_IRQn, SYSTICK_IRQp);
