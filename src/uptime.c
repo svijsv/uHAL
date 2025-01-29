@@ -57,7 +57,7 @@ const char* print_uptime(utime_t seconds, char *buf, uint_fast8_t buf_size) {
 	if (!PRINT_ALL_FIELDS && tmp == 0) {
 		goto END;
 	}
-	tmp %= SECONDS_PER_HOUR;
+	tmp %= MINUTES_PER_HOUR;
 	buf[--i] = 'm';
 	buf[--i] = (tmp % 10) + '0';
 	buf[--i] = (tmp / 10) + '0';
@@ -66,7 +66,7 @@ const char* print_uptime(utime_t seconds, char *buf, uint_fast8_t buf_size) {
 	if (!PRINT_ALL_FIELDS && tmp == 0) {
 		goto END;
 	}
-	tmp %= SECONDS_PER_DAY;
+	tmp %= (MINUTES_PER_DAY / MINUTES_PER_HOUR);
 	buf[--i] = 'h';
 	buf[--i] = (tmp % 10) + '0';
 	buf[--i] = (tmp / 10) + '0';
