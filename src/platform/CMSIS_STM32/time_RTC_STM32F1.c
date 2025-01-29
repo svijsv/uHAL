@@ -30,6 +30,7 @@
 
 #include "common.h"
 
+#if NEED_RTC
 #if HAVE_STM32F1_RTC
 #include "time_RTC.h"
 #include "system.h"
@@ -316,5 +317,25 @@ void stop_RTC_alarm(void) {
 }
 #endif // uHAL_USE_HIBERNATE
 
+#if USE_RTC_UPTIME
+err_t init_uptime(void) {
+	cfg_enable();
+	WRITE_SPLIT32(RTC->CNTH, RTC->CNTL, 0);
+	cfg_disable();
+
+	return ERR_OK;
+}
+err_t set_uptime(utime_t uptime_seconds) {
+	return _set_RTC_seconds(uptime_seconds);
+}
+err_t adj_uptime(itime_t adjustment_seconds) {
+	return _set_RTC_seconds(_get_RTC_seconds() - adjustment_seconds);
+}
+utime_t get_uptime(void) {
+	return _get_RTC_seconds();
+}
+#endif
+
 
 #endif // HAVE_STM32F1_RTC
+#endif // NEED_RTC

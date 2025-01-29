@@ -30,9 +30,11 @@
 //
 #include "common.h"
 
+#if NEED_RTC
 #if ! HAVE_STM32F1_RTC
 #include "time_RTC.h"
 #include "system.h"
+
 
 // This is defined in RTC.c
 utime_t RTC_datetime_to_second_counter(const datetime_t *datetime, utime_t now);
@@ -65,7 +67,11 @@ utime_t RTC_datetime_to_second_counter(const datetime_t *datetime, utime_t now);
 // The RTC only stores 2 digit years but we need to be able to return the correct
 // time with both a set RTC (that is, a date) and an unset RTC (an uptime), so
 // we track the 100s and 1000s ourselves.
+#if uHAL_USE_RTC
 static time_year_t year_base = TIME_YEAR_0 - (TIME_YEAR_0 % 100);
+#else
+static time_year_t year_base = 0;
+#endif
 
 static uint_fast8_t cfg_enabled = 0;
 
@@ -270,12 +276,15 @@ void RTC_init(void) {
 		CLEAR_BIT(RTC->ISR, RTC_ISR_INIT);
 	}
 
-	uint32_t tmp = RTC->RTC_BKP_DATE_REG;
-	if (tmp != 0) {
-		year_base = tmp;
+	if (uHAL_USE_RTC) {
+		uint32_t tmp = RTC->RTC_BKP_DATE_REG;
+		if (tmp != 0) {
+			year_base = tmp;
+		}
 	}
 
 	wait_for_sync();
+
 	cfg_disable();
 	NVIC_SetPriority(RTC_Alarm_IRQn, RTC_ALARM_IRQp);
 
@@ -298,7 +307,7 @@ static void calendarcfg_enable(void) {
 	return;
 }
 
-err_t _get_RTC_datetime(datetime_t *datetime) {
+static err_t _get_RTC_datetime(datetime_t *datetime) {
 	uint32_t tr, dr;
 
 	assert(datetime != NULL);
@@ -344,7 +353,7 @@ static utime_t _get_RTC_seconds(void) {
 	return 0;
 }
 
-err_t _set_RTC_datetime(const datetime_t *datetime, utime_t new_s) {
+static err_t _set_RTC_datetime(const datetime_t *datetime, utime_t new_s) {
 	uint32_t tr = 0, dr = 0;
 
 	assert(datetime != NULL);
@@ -369,7 +378,9 @@ err_t _set_RTC_datetime(const datetime_t *datetime, utime_t new_s) {
 
 		// The RTC only stores 2 digit years
 		uint_fast8_t year = datetime->year % 100;
-		year_base = datetime->year - year;
+		if (uHAL_USE_RTC) {
+			year_base = datetime->year - year;
+		}
 		dr =
 			((uint32_t )byte_to_bcd(year)            << RTC_DR_YU_Pos) |
 			((uint32_t )byte_to_bcd(datetime->month) << RTC_DR_MU_Pos) |
@@ -394,7 +405,9 @@ err_t _set_RTC_datetime(const datetime_t *datetime, utime_t new_s) {
 	}
 	if (dr != 0) {
 		MODIFY_BITS(RTC->DR, RTC_DR_DATE_MASK, dr);
-		RTC->RTC_BKP_DATE_REG = year_base;
+		if (uHAL_USE_RTC) {
+			RTC->RTC_BKP_DATE_REG = year_base;
+		}
 	}
 	calendarcfg_disable();
 
@@ -500,5 +513,30 @@ void stop_RTC_alarm(void) {
 }
 #endif // uHAL_USE_HIBERNATE
 
+#if USE_RTC_UPTIME
+err_t init_uptime(void) {
+	calendarcfg_enable();
+	RTC->TR = 0;
+	//RTC->DR = 0;
+	RTC->DR =
+		(1U << RTC_DR_MU_Pos) |
+		(1U << RTC_DR_DU_Pos)
+		;
+	calendarcfg_disable();
+
+	return ERR_OK;
+}
+err_t set_uptime(utime_t uptime_seconds) {
+	return _set_RTC_seconds(uptime_seconds);
+}
+err_t adj_uptime(itime_t adjustment_seconds) {
+	return _set_RTC_seconds(_get_RTC_seconds() - adjustment_seconds);
+}
+utime_t get_uptime(void) {
+	return _get_RTC_seconds();
+}
+#endif
+
 
 #endif // ! HAVE_STM32F1_RTC
+#endif // NEED_RTC
