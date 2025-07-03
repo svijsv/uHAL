@@ -61,6 +61,10 @@ utime_t RTC_datetime_to_second_counter(const datetime_t *datetime, utime_t now) 
 		new_now += now % SECONDS_PER_DAY;
 	}
 
+	// Use set_RTC_seconds() directly if you want to reset the clock.
+	if (!uHAL_SKIP_OTHER_CHECKS && new_now == 0) {
+		return 0;
+	}
 	return new_now;
 }
 
@@ -90,7 +94,9 @@ utime_t get_RTC_seconds(void) {
 	utime_t msticks;
 
 	msticks = NOW_MS();
-	RTC_millis += (msticks - RTC_prev_msticks);
+	if (msticks > RTC_prev_msticks) {
+		RTC_millis += (msticks - RTC_prev_msticks);
+	}
 	RTC_prev_msticks = msticks;
 
 	// This should happen close enough to every second that repeated subtraction
