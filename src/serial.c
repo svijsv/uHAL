@@ -75,7 +75,6 @@ static uint8_t printf_buffer_size = 0;
 void _print_platform_info(void (*printf_putc)(uint_fast8_t c));
 
 static void flush_printf_buffer(void);
-static void serial_putc(uint_fast8_t c);
 
 
 err_t serial_init(void) {
@@ -110,7 +109,7 @@ static void flush_printf_buffer(void) {
 	return;
 }
 #if UART_COMM_BUFFER_BYTES > 0
-static void serial_putc(uint_fast8_t c) {
+void serial_putc(uint_fast8_t c) {
 	uHAL_assert(printf_buffer_size < UART_COMM_BUFFER_BYTES);
 
 	printf_buffer[printf_buffer_size] = c;
@@ -122,7 +121,7 @@ static void serial_putc(uint_fast8_t c) {
 	return;
 }
 #else // !UART_COMM_BUFFER_BYTES > 0
-static void serial_putc(uint_fast8_t c) {
+void serial_putc(uint_fast8_t c) {
 	uint8_t c8 = c;
 	uart_transmit_block(NULL, &c8, 1, UART_COMM_TIMEOUT_MS);
 

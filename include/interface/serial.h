@@ -65,8 +65,14 @@ void serial_printf(const char *fmt, ...)
 /// Print an un-formatted string.
 ///
 /// @param msg The string to print.
-/// @param len The length of the string. Calculated if 0.
+/// @param len The length in bytes of the string. Calculated if 0.
 void serial_print(const char *msg, txsize_t len);
+
+///
+/// Send a single byte.
+///
+/// @param c The character to send.
+void serial_putc(uint_fast8_t c);
 
 # if uHAL_USE_TERMINAL || __HAVE_DOXYGEN__
 ///
