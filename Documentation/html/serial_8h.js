@@ -14,6 +14,7 @@ var serial_8h =
     [ "serial_init", "serial_8h.html#a98ae539479fd8c068e312325360479a0", null ],
     [ "serial_print", "serial_8h.html#a4eaedfb9abc54944d8cfa0c9f6c76ae2", null ],
     [ "serial_printf", "serial_8h.html#ab61821ba3410c25a3f938bc9e86f585e", null ],
+    [ "serial_putc", "serial_8h.html#adcc9f5bf03233062838e532feea09bbf", null ],
     [ "terminal", "serial_8h.html#a9aab305923a89c85460a518045f72493", null ],
     [ "terminal_extra_cmds", "serial_8h.html#a6dab94497d4cf2ff2cc7ac517a2bce3b", null ],
     [ "terminal_extra_help", "serial_8h.html#ad09759b79acbe4a5385c864d5c677054", null ]

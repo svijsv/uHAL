@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"ssd1306_8h.html#unionssd1306__cfg__t_8access":[4,0,0,0,0,0,0,3],
 "ssd1306_8h_source.html":[4,0,0,0,0,0,0],
 "structterminal__cmd__t.html":[3,0,6],
 "structterminal__cmd__t.html#a4f051b1b728dabee2a2403db53bce7a9":[3,0,6,0],

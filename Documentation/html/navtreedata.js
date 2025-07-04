@@ -54,7 +54,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "adc_8h.html",
-"ssd1306_8h_source.html"
+"ssd1306_8h.html#unionssd1306__cfg__t_8access"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

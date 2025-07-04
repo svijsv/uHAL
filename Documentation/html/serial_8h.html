@@ -159,6 +159,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>print_platform_info</
 <tr class="memitem:a4eaedfb9abc54944d8cfa0c9f6c76ae2" id="r_a4eaedfb9abc54944d8cfa0c9f6c76ae2"><td class="memItemLeft" align="right" valign="top">void void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="serial_8h.html#a4eaedfb9abc54944d8cfa0c9f6c76ae2">serial_print</a> (const char *msg, <a class="el" href="interface_8h.html#af6be0541d47610a3a197da22071af4bb">txsize_t</a> len)</td></tr>
 <tr class="memdesc:a4eaedfb9abc54944d8cfa0c9f6c76ae2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print an un-formatted string.  <br /></td></tr>
 <tr class="separator:a4eaedfb9abc54944d8cfa0c9f6c76ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcc9f5bf03233062838e532feea09bbf" id="r_adcc9f5bf03233062838e532feea09bbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="serial_8h.html#adcc9f5bf03233062838e532feea09bbf">serial_putc</a> (uint_fast8_t c)</td></tr>
+<tr class="memdesc:adcc9f5bf03233062838e532feea09bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a single byte.  <br /></td></tr>
+<tr class="separator:adcc9f5bf03233062838e532feea09bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9aab305923a89c85460a518045f72493" id="r_a9aab305923a89c85460a518045f72493"><td class="memItemLeft" align="right" valign="top"><a id="a9aab305923a89c85460a518045f72493" name="a9aab305923a89c85460a518045f72493"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>terminal</b> (void)</td></tr>
 <tr class="memdesc:a9aab305923a89c85460a518045f72493"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enter the interactive terminal. <br /></td></tr>
@@ -513,7 +516,7 @@ FMEM_STORAGE const char&#160;</td><td class="memItemRight" valign="bottom"><b>te
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">msg</td><td>The string to print. </td></tr>
-    <tr><td class="paramname">len</td><td>The length of the string. Calculated if 0. </td></tr>
+    <tr><td class="paramname">len</td><td>The length in bytes of the string. Calculated if 0. </td></tr>
   </table>
   </dd>
 </dl>
@@ -551,6 +554,32 @@ FMEM_STORAGE const char&#160;</td><td class="memItemRight" valign="bottom"><b>te
   <table class="params">
     <tr><td class="paramname">fmt</td><td>A <code>printf()-style</code> format string. </td></tr>
     <tr><td class="paramname">...</td><td>The values for the format string. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="adcc9f5bf03233062838e532feea09bbf" name="adcc9f5bf03233062838e532feea09bbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcc9f5bf03233062838e532feea09bbf">&#9670;&#160;</a></span>serial_putc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void serial_putc </td>
+          <td>(</td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Send a single byte. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c</td><td>The character to send. </td></tr>
   </table>
   </dd>
 </dl>
